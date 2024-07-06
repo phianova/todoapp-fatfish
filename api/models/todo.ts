@@ -1,4 +1,4 @@
-import type { TodoItem } from '../types.ts';
+import type { TodoItem } from '../types';
 import mongoose from 'mongoose';
 
 const todo = new mongoose.Schema<TodoItem>({
