@@ -1,13 +1,15 @@
-import { Text, View } from "react-native";
-import React from "react";
+import { Button, Text, View } from "react-native";
+import React, { useState } from "react";
 
-import ListContainer from "@/components/ListContainer";
+import ListContainer from "../components/ListContainer";
+import AddToDoModal from "../components/AddToDoModal";
 
 import type { TodoItem } from "../types";
 
 
 export default function Index() {
 
+  const [modalVisible, setModalVisible] = useState(false);
   // fetch all todos for user
   const todos: TodoItem[] = [
       {
@@ -52,6 +54,8 @@ export default function Index() {
       <Text style={{ fontSize: 28, lineHeight: 32, marginTop: 6 }}>To Do</Text>
       <ListContainer todos={todos} listTitle="Today"/>
       <ListContainer todos={todos} listTitle="All to-dos"/>
+      <Button title="Add To Do" onPress={() => setModalVisible(true)}></Button>
+      {modalVisible && <AddToDoModal modalVisible={modalVisible} setModalVisible={setModalVisible} /> }
     </View>
   );
 }
