@@ -7,6 +7,8 @@ const user = new mongoose.Schema<User>({
     todos: {
         refId: { type: mongoose.Schema.Types.ObjectId, ref: "Todo" },
     }
-});
+},
+    { collection: "users" }
+);
 
 export default mongoose.model<User>('User', user)

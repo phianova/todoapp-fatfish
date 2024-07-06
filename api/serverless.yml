@@ -1,0 +1,21 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: sophiawarrendev
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: todoapp-ff
+service: todoapp-fatfish
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+  environment:
+    MONGODB_URI: ${env:MONGODB_URI}
+
+functions:
+  api: 
+    handler: index.handler
+    events: 
+      - http: 
+          method: ANY
+          path: /
+          cors: true
+      - http: 'ANY {proxy+}'

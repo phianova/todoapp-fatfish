@@ -3,9 +3,17 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { router } from './routes';
+import serverless from 'serverless-http';
 
 const app: express.Express = express();
 const port = process.env.PORT || 3000;
+
+// api gateway:
+// endpoints:
+//   ANY - https://4wgjp9tm5d.execute-api.eu-west-1.amazonaws.com/dev/
+//   ANY - https://4wgjp9tm5d.execute-api.eu-west-1.amazonaws.com/dev/{proxy+}
+// functions:
+//   api: todoapp-fatfish-dev-api (2.8 MB)
 
 dotenv.config();
 
@@ -25,4 +33,4 @@ app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 })
 
-export default app;
+module.exports.handler = serverless(app)
