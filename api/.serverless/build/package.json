@@ -1,0 +1,10 @@
+{
+  "dependencies": {},
+  "overrides": {
+    "eslint": "^9.6.0"
+  },
+  "scripts": {
+    "test": "npx jest --watchAll",
+    "start": "nodemon index.ts"
+  }
+}

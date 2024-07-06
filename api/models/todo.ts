@@ -8,6 +8,8 @@ const todo = new mongoose.Schema<TodoItem>({
     createdDate: { type: String, required: true },
     dueDate: { type: String, required: true },
     completed: { type: Boolean, required: true },
-});
+},
+{ collection: "todos" }
+);
 
 export default mongoose.model<TodoItem>('Todo', todo)
