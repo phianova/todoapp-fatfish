@@ -1,6 +1,6 @@
 // Define type for todo item
 export interface TodoItem {
-    id: number;
+    _id: string;
     title: string;
     description: string;
     priority: number;
@@ -11,8 +11,13 @@ export interface TodoItem {
 
 // Define type for user
 export interface User {
-    id: number;
+    _id: string;
     name: string;
     email: string;
-    todos: TodoItem[];
+    todos: TodoRef[];
+}
+
+// Define type for todo item reference
+export interface TodoRef {
+    refId: TodoItem;
 }

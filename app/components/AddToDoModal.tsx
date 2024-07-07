@@ -1,14 +1,44 @@
 import { Modal, View, TextInput, Button, Text } from "react-native";
-import React, { useState } from "react";
-// import type { TodoItem } from "../types";
+import React, { useEffect, useCallback } from "react";
+import { useForm } from "react-hook-form";
+
+import ApiClient from "../utils/ApiClient";
+
+interface FormData {
+    title: string;
+    description: string;
+    priority: number;
+    dueDate: Date;
+}
 
 
 export default function AddToDoModal({ modalVisible, setModalVisible }: { modalVisible: boolean, setModalVisible: React.Dispatch<React.SetStateAction<boolean>>}) {
+    const { setValue, handleSubmit, register } = useForm<FormData>();
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [priority, setPriority] = useState(1);
-    const [dueDate, setDueDate] = useState(new Date());
+    const client = new ApiClient();
+
+    const onSubmit = useCallback((formData: FormData) => {
+        console.log(formData);
+        addTodoCall(formData.title, formData.description, formData.priority, formData.dueDate);
+        setModalVisible(false);
+    }, []);
+
+    const onChangeField = useCallback((name: string) => (text: string) => {
+        setValue(name as ("title" | "description" | "priority" | "dueDate"), text);
+      }, []);
+
+    useEffect(() => {
+        register("title");
+        register("description");
+        register("priority");
+        register("dueDate");
+    }, [register]);
+
+    const addTodoCall = async (title: string, description: string, priority: number, dueDate: Date) => {
+        await client.addTodo(title, description, priority, dueDate, "warrenova@outlook.com");
+        console.log("todo added");
+        setModalVisible(false);
+    }
 
     return (
         <Modal
@@ -25,23 +55,19 @@ export default function AddToDoModal({ modalVisible, setModalVisible }: { modalV
                     <Text>Add To Do</Text>
                     <TextInput
                         placeholder="Title"
-                        value={title}
-                        onChangeText={text => setTitle(text)}
+                        onChangeText={onChangeField("title")}
                     />
                     <TextInput
                         placeholder="Description"
-                        value={description}
-                        onChangeText={text => setDescription(text)}
+                        onChangeText={onChangeField("description")}
                     />
                     <TextInput
                         placeholder="Priority"
-                        value={priority.toString()}
-                        onChangeText={text => setPriority(parseInt(text))}
+                        onChangeText={onChangeField("priority")}
                     />
                     <TextInput
                         placeholder="Due Date"
-                        value={dueDate.toLocaleDateString("en-GB")}
-                        onChangeText={text => setDueDate(new Date(text))}
+                        onChangeText={onChangeField("dueDate")}
                     />
                     <View>
                         <Button
@@ -50,9 +76,7 @@ export default function AddToDoModal({ modalVisible, setModalVisible }: { modalV
                         />
                         <Button
                             title="Add"
-                            onPress={() => {console.log("Adding todo"); 
-                                // onAdd({id: 0, title, description, priority, createdDate: new Date(), dueDate, completed: false}); 
-                                setModalVisible(false)}}
+                            onPress={handleSubmit(onSubmit)}
                         />
                     </View>
                 </View>

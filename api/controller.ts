@@ -1,6 +1,8 @@
 import express from 'express';
 import Todo from './models/todo';
 import User from './models/user';
+// import { TodoRef } from './types';
+// import { TodoItem } from './types';
 
 export const addToDo = async function (req: express.Request, res: express.Response) {
     try {
@@ -40,11 +42,20 @@ export const addToDo = async function (req: express.Request, res: express.Respon
 
 export const getToDos = async function (req: express.Request, res: express.Response) {
     try {
-        const todos = await User.findOne({ email: req.body.userEmail }).populate('todos.refId');
+        const user = await User.findOne({ email: req.params.userEmail }).populate('todos.refId');
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+        const todos = user?.todos.map((todo) => {
+            return todo.refId;
+        });
         return res.status(200).json({
             success: true,
             message: 'Todos fetched successfully',
-            data: todos?.todos
+            data: todos
         });
     } catch (error) {
         return res.status(500).json({
@@ -77,10 +88,8 @@ export const deleteToDo = async function (req: express.Request, res: express.Res
 export const updateToDo = async function (req: express.Request, res: express.Response) {
     try {
         const id = req.params.id;
-        const { title, description, priority, completed, dueDate, userEmail } = req.body;
+        const { title, description, priority, completed, dueDate } = req.body;
         await Todo.findOneAndUpdate({ _id: id }, { $set: { title, description, priority, completed, dueDate } });
-        const todoRef = { refId: id };
-        await User.findOneAndUpdate({ email: userEmail }, { $pull: { todos: todoRef } });
         return res.status(200).json({
             success: true,
             message: 'Todo updated successfully',

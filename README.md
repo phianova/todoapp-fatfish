@@ -2,31 +2,55 @@
 Simple to do list app for technical assessment for Fat Fish Digital
 
 ## Setup instructions:
-[insert instructions to deploy/run code here]
-
+Software:
+- Download Android Studio to use this with an Android emulator. Once Android Studio is installed, click "More" > "Virtual Device Manager", and add a new device - I use the Pixel 7 Pro with API 33.
+- Development build link is here:
+- The API is deployed to Serverless at: 
+- Run `npm install` in each of /api and /app to download the requisite packages in your local environment.
+- The app can be run from within /app using the command `npx expo start` and pressing `a` to run it in your emulator.
 
 ## Project plan/starting points:
+Tech:
 - Setup CRUD API in Node.js/TypeScript with Express/MongoDB
-- To do object should have title, description, due date, created date, priority, completed status
 - Set up Jest testing framework
-- Research Serverless & necessary setup to deploy
 - Set up React Native frontend
-- Components should include todo item, expanded todo card, checkbox, list container
+- Set up Kinde auth
 - Research Redux
+- Research Serverless & deploy
+
+Structure:
+- To do object should have title, description, due date, created date, priority, completed status
+- Components should include todo item, expanded todo item, list container
+- Monorepo with /app and /api directories
+
+Desired functionality on top of CRUD:
+- Strikethrough effect on completion
+- "Today" list
+- Colour priority indicators
+- Expanded/collapsed Todo items
+- Date picker to add due dates in a user-friendly way
 
 ## Thoughts on:
 
 ### Data storage
+I went with a MongoDB database - partly because of familiarity, but partly because I felt the JSON-style data storage would make more sense for the todo objects than a relational database would. However, having wrestled a bit with Mongo's interactions with Serverless, I think on balance I would choose DynamoDB if I did this again!
 
 ### Auth
+I went with the principle of "never build your own auth" and used Kinde. They have a React Native SDK making integration relatively easy and their service works really well if you have a straightforward setup like this one.
 
 ### Automated testing
+I used Jest with Supatest for testing.
 
 ### Monorepo/separate repos
+I went for a monorepo. I think it makes sense to have one repo per product - not one repo for an entire company's activities, but one repo for everything to do with a singular product. This is partly just for "tidiness" - keeping everything in one place, where you need it, to avoid context switching - but also so that changes to one part of the product can easily be tested for any unintended impacts across the whole scope of the product.
 
 ### Code structure
+I began with the boilerplate Expo app and tweaked the structure to meet my needs. As this was a very basic app, I didn't need some of the functionality therein so I removed it to make the file structure clearer and cleaner. For the backend Express API, I separated out the router from the index and controller to clearly indicate which functionality lay with each stage.
+I abstracted out my API client in the frontend to a class constructor, keeping the bulk of the functionality out of my pages/components. 
+The component structure is pretty simple - I used a modal to add a new todo item, a container component to produce each list (meaning there's scalability if you wanted to, for example, add filtering and other functionality in future), and a collapsed and expanded todo component. There wasn't really a need for complex navigation components in this case so I kept it very simple. 
 
 ### Code linting
+I used ESLint - I think it makes sense for everyone across an organisation to use the same formatter/linter, regardless what that might be. I installed the TypeScript extensions to ensure the linter checked for type safety.
 
 
 Brief:

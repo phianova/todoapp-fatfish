@@ -1,45 +1,54 @@
 import { Button, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ListContainer from "../components/ListContainer";
 import AddToDoModal from "../components/AddToDoModal";
+import ApiClient from "../utils/ApiClient";
 
 import type { TodoItem } from "../types";
 
 
 export default function Index() {
-
+  const client = new ApiClient;
   const [modalVisible, setModalVisible] = useState(false);
   // fetch all todos for user
-  const todos: TodoItem[] = [
-      {
-        id: 1,
-        title: "Buy milk",
-        description: "Buy milk from the store",
-        priority: 1,
-        createdDate: new Date(),
-        dueDate: new Date(),
-        completed: false,
-      },
-      {
-        id: 2,
-        title: "Buy bread",
-        description: "Buy bread from the store",
-        priority: 2,
-        createdDate: new Date(),
-        dueDate: new Date(),
-        completed: false,
-      },
-      {
-        id: 3,
-        title: "Buy cheese",
-        description: "Buy cheese from the store",
-        priority: 3,
-        createdDate: new Date(),
-        dueDate: new Date(),
-        completed: false,
-      },
-  ]
+  const [loading, setLoading] = useState(true);
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+
+  const refreshTodos = async () => {
+    await client.getTodos("warrenova@outlook.com")
+      .then((todos) => {
+        setLoading(false);
+        setTodos(todos);
+      }).catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const todayTodos = () => {
+    const todayArray = []
+    const today = new Date();
+    if (todos.length === 0) {
+      return [];
+    }
+    else if (todos.length === 1) {
+      if ((new Date(todos[0].dueDate).getDate() === today.getDate()) && (new Date(todos[0].dueDate).getMonth() === today.getMonth()) && (new Date(todos[0].dueDate).getFullYear() === today.getFullYear())) {
+        todayArray.push(todos[0]);
+      }
+    }
+    else {
+      for (const todo of todos) {
+        if ((new Date(todo.dueDate).getDate() === today.getDate()) && (new Date(todo.dueDate).getMonth() === today.getMonth()) && (new Date(todo.dueDate).getFullYear() === today.getFullYear())) {
+          todayArray.push(todo);
+        }
+      }
+    }
+    return todayArray;
+  };
+
+  useEffect(() => {
+    refreshTodos();
+  }, [todos]);
 
   // fetch TODAY's todos for user
 
@@ -52,10 +61,15 @@ export default function Index() {
       }}
     >
       <Text style={{ fontSize: 28, lineHeight: 32, marginTop: 6 }}>To Do</Text>
-      <ListContainer todos={todos} listTitle="Today"/>
-      <ListContainer todos={todos} listTitle="All to-dos"/>
+      {loading && <Text>Loading...</Text>}
+      {!loading &&
+        <>
+          <ListContainer todos={todayTodos()} listTitle="Today" />
+          <ListContainer todos={todos} listTitle="All to-dos" />
+        </>
+      }
       <Button title="Add To Do" onPress={() => setModalVisible(true)}></Button>
-      {modalVisible && <AddToDoModal modalVisible={modalVisible} setModalVisible={setModalVisible} /> }
+      {modalVisible && <AddToDoModal modalVisible={modalVisible} setModalVisible={setModalVisible} />}
     </View>
   );
 }
