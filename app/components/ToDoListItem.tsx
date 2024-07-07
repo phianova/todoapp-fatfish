@@ -16,22 +16,24 @@ interface Props {
 
 export default function ToDoListItem({ todo, expanded }: Props) {
 
-    // props to display - title, priority colour, due date, completed
-
+    const id = todo._id;
+    const client = new ApiClient();
+    const dueDate = formatShortDate(todo.dueDate.toString());
     const priorityColour = (todo.priority === 1) ? "red" : ((todo.priority === 2) ? "yellow" : (todo.priority === 3) ? "green" : "transparent");
+    const isFirstRender = useRef(true);
+
+    // State
     const [completedStyle, setCompletedStyle] = useState("none" as "line-through" | "none" | "underline" | "underline line-through" | undefined);
     const [isChecked, setChecked] = useState(todo.completed);
     const [isExpanded, setExpanded] = useState(expanded);
-    const isFirstRender = useRef(true);
-
-    const dueDate = formatShortDate(todo.dueDate.toString());
-
     const [isCompleted, setCompleted] = useState(todo.completed);
 
-    const id = todo._id;
+    //Actions
+    const updateTodoCall = async (title: string, description: string, priority: number, dueDate: Date, completed: boolean) => {
+        await client.updateTodo(id, title, description, priority, dueDate, completed, "warrenova@outlook.com");
+    };
 
-    const client = new ApiClient();
-
+    //Effects
     useEffect(() => {
         if (isChecked) {
             setCompletedStyle("line-through");
@@ -46,10 +48,7 @@ export default function ToDoListItem({ todo, expanded }: Props) {
         }
     }, [isChecked]);
 
-    const updateTodoCall = async (title: string, description: string, priority: number, dueDate: Date, completed: boolean) => {
-        await client.updateTodo(id, title, description, priority, dueDate, completed, "warrenova@outlook.com");
-    };
-
+    //View
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             {isExpanded &&

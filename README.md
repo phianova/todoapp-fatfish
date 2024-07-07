@@ -48,6 +48,7 @@ I went for a monorepo. I think it makes sense to have one repo per product - not
 I began with the boilerplate Expo app and tweaked the structure to meet my needs. As this was a very basic app, I didn't need some of the functionality therein so I removed it to make the file structure clearer and cleaner. For the backend Express API, I separated out the router from the index and controller to clearly indicate which functionality lay with each stage.
 I abstracted out my API client in the frontend to a class constructor, keeping the bulk of the functionality out of my pages/components. 
 The component structure is pretty simple - I used a modal to add a new todo item, a container component to produce each list (meaning there's scalability if you wanted to, for example, add filtering and other functionality in future), and a collapsed and expanded todo component. There wasn't really a need for complex navigation components in this case so I kept it very simple. 
+If I had prior knowledge of Redux, I would have used it from the start, but I wanted to ensure I had a working app and also gain an understanding of how it differs from standard React, so I started with a basic React Native application and then abstracted out the state management later.
 
 ### Code linting
 I used ESLint - I think it makes sense for everyone across an organisation to use the same formatter/linter, regardless what that might be. I installed the TypeScript extensions to ensure the linter checked for type safety.

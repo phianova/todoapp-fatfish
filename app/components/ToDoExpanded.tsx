@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import ApiClient from "../utils/ApiClient";
 import formatLongDate from "../utils/dates";
 
+// Types
 interface Props {
     todo: TodoItem,
     isChecked: boolean
@@ -28,18 +29,17 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
             }
         }
     );
+    const dueDate = formatLongDate(todo.dueDate.toString());
+    const id = todo._id;
+    const client = new ApiClient();
+    const priorityColour = (todo.priority === 1) ? "red" : ((todo.priority === 2) ? "yellow" : (todo.priority === 3) ? "green" : "transparent");
+
+    // State
     const [isEditMode, setEditMode] = useState(false);
     const [editButtonTitle, setEditButtonTitle] = useState("Edit");
-
-    const id = todo._id;
-
-    const client = new ApiClient();
-
-    const priorityColour = (todo.priority === 1) ? "red" : ((todo.priority === 2) ? "yellow" : (todo.priority === 3) ? "green" : "transparent");
     const [completedStyle, setCompletedStyle] = useState("none" as "line-through" | "none" | "underline" | "underline line-through" | undefined);
 
-    const dueDate = formatLongDate(todo.dueDate.toString());
-
+    // Actions
     const onSubmit = useCallback((formData: FormData) => {
         console.log(formData);
         if (formData.title === "" || formData.title === undefined) {
@@ -69,6 +69,11 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
         await client.deleteTodo(id, "warrenova@outlook.com");
     }
 
+    const onChangeField = useCallback((name: string) => (text: string) => {
+        setValue(name as ("title" | "description" | "priority" | "dueDate"), text);
+    }, []);
+
+    // Effects
     useEffect(() => {
         if (isEditMode) {
             setEditButtonTitle("Cancel");
@@ -91,10 +96,6 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
         register("priority");
         register("dueDate");
     }, [register]);
-
-    const onChangeField = useCallback((name: string) => (text: string) => {
-        setValue(name as ("title" | "description" | "priority" | "dueDate"), text);
-    }, []);
 
     return (
         <View>

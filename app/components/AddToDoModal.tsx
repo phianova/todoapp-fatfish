@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 
 import ApiClient from "../utils/ApiClient";
 
+// Types 
 interface FormData {
     title: string;
     description: string;
@@ -11,12 +12,11 @@ interface FormData {
     dueDate: Date;
 }
 
-
 export default function AddToDoModal({ modalVisible, setModalVisible }: { modalVisible: boolean, setModalVisible: React.Dispatch<React.SetStateAction<boolean>>}) {
     const { setValue, handleSubmit, register } = useForm<FormData>();
-
     const client = new ApiClient();
 
+    // Actions
     const onSubmit = useCallback((formData: FormData) => {
         console.log(formData);
         addTodoCall(formData.title, formData.description, formData.priority, formData.dueDate);
@@ -27,6 +27,13 @@ export default function AddToDoModal({ modalVisible, setModalVisible }: { modalV
         setValue(name as ("title" | "description" | "priority" | "dueDate"), text);
       }, []);
 
+    const addTodoCall = async (title: string, description: string, priority: number, dueDate: Date) => {
+        await client.addTodo(title, description, priority, dueDate, "warrenova@outlook.com");
+        console.log("todo added");
+        setModalVisible(false);
+    }
+
+    // Effects
     useEffect(() => {
         register("title");
         register("description");
@@ -34,12 +41,7 @@ export default function AddToDoModal({ modalVisible, setModalVisible }: { modalV
         register("dueDate");
     }, [register]);
 
-    const addTodoCall = async (title: string, description: string, priority: number, dueDate: Date) => {
-        await client.addTodo(title, description, priority, dueDate, "warrenova@outlook.com");
-        console.log("todo added");
-        setModalVisible(false);
-    }
-
+    // View
     return (
         <Modal
             animationType="slide"
