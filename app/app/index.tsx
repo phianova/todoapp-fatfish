@@ -9,12 +9,15 @@ import type { TodoItem } from "../types";
 
 
 export default function Index() {
-  const client = new ApiClient;
+
+  // State
   const [modalVisible, setModalVisible] = useState(false);
-  // fetch all todos for user
   const [loading, setLoading] = useState(true);
   const [todos, setTodos] = useState<TodoItem[]>([]);
 
+  const client = new ApiClient;
+
+  // Actions
   const refreshTodos = async () => {
     await client.getTodos("warrenova@outlook.com")
       .then((todos) => {
@@ -46,12 +49,12 @@ export default function Index() {
     return todayArray;
   };
 
+  // Effects
   useEffect(() => {
     refreshTodos();
   }, [todos]);
 
-  // fetch TODAY's todos for user
-
+// View
   return (
     <View
       style={{

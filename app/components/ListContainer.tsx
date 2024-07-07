@@ -5,12 +5,14 @@ import type { TodoItem } from "../types";
 
 import ToDoListItem from "./ToDoListItem";
 
+// Types
 interface Props {
     todos: TodoItem[],
     listTitle: string
 }
 
 export default function ListContainer({ todos, listTitle }: Props) {
+// View
     if (todos.length === 0) {
         return (
             <View >
