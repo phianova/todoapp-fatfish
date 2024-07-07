@@ -11,13 +11,30 @@ interface Props {
 }
 
 export default function ListContainer({ todos, listTitle }: Props) {
-
-    return (
-    <View >
-        <Text>{listTitle}</Text>
-        {todos.map((todo) => (
-            <ToDoListItem key={todo.id} todo={todo} expanded={false} />
-        ))}
-    </View>
-    );
+    if (todos.length === 0) {
+        return (
+            <View >
+                <Text>{listTitle}</Text>
+                <Text>No todos</Text>
+            </View>
+        );
+    }
+    else if (todos.length === 1) {
+        return (
+            <View >
+                <Text>{listTitle}</Text>
+                <ToDoListItem key={todos[0]._id} todo={todos[0]} expanded={false} />
+            </View>
+        );
+    }
+    else {
+        return (
+            <View >
+                <Text>{listTitle}</Text>
+                {todos.map((todo, index) => (
+                    <ToDoListItem key={index} todo={todo} expanded={false} />
+                ))}
+            </View>
+        );
+    }
 }   

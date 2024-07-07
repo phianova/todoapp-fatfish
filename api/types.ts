@@ -1,18 +1,24 @@
+import mongoose from 'mongoose';
 // Define type for todo item
 export interface TodoItem {
-    id: number;
+    _id: mongoose.Schema.Types.ObjectId;
     title: string;
     description: string;
     priority: number;
-    createdDate: string;
-    dueDate: string;
+    createdDate: Date;
+    dueDate: Date;
     completed: boolean;
 }
 
 // Define type for user
 export interface User {
-    id: number;
+    _id: mongoose.Schema.Types.ObjectId;
     name: string;
     email: string;
-    todos: TodoItem[];
+    todos: TodoRef[];
+}
+
+// Define type for todo item reference
+export interface TodoRef {
+    refId: TodoItem;
 }

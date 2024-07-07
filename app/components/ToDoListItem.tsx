@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { View, Text, Button } from "react-native";
 import type { TodoItem } from "../types";
 import Checkbox from 'expo-checkbox';
+import formatShortDate from "../utils/dates";
+
+import ApiClient from "../utils/ApiClient";
 
 import ToDoExpanded from "./ToDoExpanded";
 
@@ -15,42 +18,50 @@ export default function ToDoListItem({ todo, expanded }: Props) {
 
     // props to display - title, priority colour, due date, completed
 
-    const [priorityColour, setPriorityColour] = useState("transparent");
+    const priorityColour = (todo.priority === 1) ? "red" : ((todo.priority === 2) ? "yellow" : (todo.priority === 3) ? "green" : "transparent");
     const [completedStyle, setCompletedStyle] = useState("none" as "line-through" | "none" | "underline" | "underline line-through" | undefined);
-    const [isChecked, setChecked] = useState(false);
+    const [isChecked, setChecked] = useState(todo.completed);
     const [isExpanded, setExpanded] = useState(expanded);
+    const isFirstRender = useRef(true);
 
-    const styledDate = todo.dueDate.getDate() + "/" + (todo.dueDate.getMonth() + 1);
+    const dueDate = formatShortDate(todo.dueDate.toString());
+
+    const [isCompleted, setCompleted] = useState(todo.completed);
+
+    const id = todo._id;
+
+    const client = new ApiClient();
 
     useEffect(() => {
-        if (todo.priority === 1) {
-            setPriorityColour("red");
-        } else if (todo.priority === 2) {
-            setPriorityColour("yellow");
-        } else if (todo.priority === 3) {
-            setPriorityColour("green");
-        }
-        if (todo.completed || isChecked) {
+        if (isChecked) {
             setCompletedStyle("line-through");
-            setChecked(true);
         } else {
             setCompletedStyle("none");
-            setChecked(false);
         }
-    }, [todo, isChecked]);
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+        } else {
+            setCompleted(isChecked);
+            updateTodoCall(todo.title, todo.description, todo.priority, todo.dueDate, isCompleted);
+        }
+    }, [isChecked]);
+
+    const updateTodoCall = async (title: string, description: string, priority: number, dueDate: Date, completed: boolean) => {
+        await client.updateTodo(id, title, description, priority, dueDate, completed, "warrenova@outlook.com");
+    };
 
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             {isExpanded &&
-            <ToDoExpanded todo={todo}/>
+            <ToDoExpanded todo={todo} isChecked={isChecked}/>
             } 
             {!isExpanded &&
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
                     <Text style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}>{todo.title}</Text>
-                    <Text style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}>{styledDate}</Text>
-                    <Checkbox value={isChecked} onValueChange={setChecked} />
+                    <Text style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}>{dueDate}</Text>
                 </View>
             }
+            <Checkbox value={isChecked} onValueChange={() => setChecked(!isChecked)} />
             <Button title={isExpanded ? "Collapse" : "Expand"} onPress={() => setExpanded(!isExpanded)}></Button>
         </View>
     );
