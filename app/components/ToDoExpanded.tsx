@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 import { View, Text, Button, TextInput } from "react-native";
-import type { TodoItem } from "../types";
+import type { TodoItem } from "../utils/types";
 import { useForm } from "react-hook-form";
 
 import ApiClient from "../utils/ApiClient";

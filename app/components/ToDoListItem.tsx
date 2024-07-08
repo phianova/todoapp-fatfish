@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { View, Text, Button } from "react-native";
-import type { TodoItem } from "../types";
+import type { TodoItem } from "../utils/types";
 import Checkbox from 'expo-checkbox';
 import formatShortDate from "../utils/dates";
 

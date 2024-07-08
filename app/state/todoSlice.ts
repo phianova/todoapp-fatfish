@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TodoItem } from './types';
+import { TodoItem } from '../utils/types';
 // import ApiClient from './utils/ApiClient';
 
 // const client = new ApiClient();

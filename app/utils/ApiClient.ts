@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TodoItem } from '../types';
+import { TodoItem } from './types';
 
 const url = "https://4wgjp9tm5d.execute-api.eu-west-1.amazonaws.com/dev"
 

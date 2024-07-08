@@ -1,7 +1,7 @@
 import { Slot } from "expo-router";
 import React from "react";
 import { Provider } from "react-redux";
-import store from "../store";
+import store from "../state/store";
 import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 

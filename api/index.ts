@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { router } from './routes';
 import serverless from 'serverless-http';
+import cors from 'cors';
 
 const app: express.Express = express();
 const port = process.env.PORT || 3000;
@@ -28,6 +29,10 @@ mongoose
 
 app.use(express.json());
 app.use('/', router);
+app.use(cors({
+    origin: '*',
+}
+));
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);

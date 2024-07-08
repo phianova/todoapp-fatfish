@@ -6,7 +6,7 @@ import AddToDoModal from "../../components/AddToDoModal";
 import ApiClient from "../../utils/ApiClient";
 import { Link } from "expo-router"
 
-import type { TodoItem } from "../../types";
+import type { TodoItem } from "../../utils/types";
 
 
 export default function Index() {
