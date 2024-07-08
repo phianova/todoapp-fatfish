@@ -40,6 +40,7 @@ export default function Page() {
 
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId });
+        
         router.replace('/');
       } else {
         console.error(signInAttempt.status);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TodoItem } from '../types';
+import { TodoItem } from './types';
 
 const url = "https://4wgjp9tm5d.execute-api.eu-west-1.amazonaws.com/dev"
 
@@ -14,7 +14,7 @@ export default class ApiClient {
         });
     }
 
-    async addTodo(title: string, description: string, priority: number, dueDate: Date, userEmail: string) {
+    async addTodo(title: string, description: string, priority: number, dueDate: string, userEmail: string) {
         return await axios({
             method: 'POST',
             url: `${url}/add`,
@@ -32,7 +32,7 @@ export default class ApiClient {
         });
     }
 
-    async updateTodo(id: string, title: string, description: string, priority: number, dueDate: Date, completed: boolean, userEmail: string) {
+    async updateTodo(id: string, title: string, description: string, priority: number, dueDate: string, completed: boolean, userEmail: string) {
         return await axios({
             method: 'PUT',
             url: `${url}/update/${id}`,
