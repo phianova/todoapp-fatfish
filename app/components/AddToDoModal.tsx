@@ -5,6 +5,11 @@ import { useForm } from "react-hook-form";
 import ApiClient from "../utils/ApiClient";
 
 // Types 
+interface Props {
+    modalVisible: boolean;
+    setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    userEmail: string;
+}
 interface FormData {
     title: string;
     description: string;
@@ -12,9 +17,12 @@ interface FormData {
     dueDate: Date;
 }
 
-export default function AddToDoModal({ modalVisible, setModalVisible }: { modalVisible: boolean, setModalVisible: React.Dispatch<React.SetStateAction<boolean>>}) {
+export default function AddToDoModal({ modalVisible, setModalVisible, userEmail }:Props) {
     const { setValue, handleSubmit, register } = useForm<FormData>();
     const client = new ApiClient();
+
+    console.log("in modal", userEmail)
+
 
     // Actions
     const onSubmit = useCallback((formData: FormData) => {
@@ -28,7 +36,8 @@ export default function AddToDoModal({ modalVisible, setModalVisible }: { modalV
       }, []);
 
     const addTodoCall = async (title: string, description: string, priority: number, dueDate: Date) => {
-        await client.addTodo(title, description, priority, dueDate, "warrenova@outlook.com");
+        console.log(userEmail)
+        await client.addTodo(title, description, priority, dueDate, userEmail);
         console.log("todo added");
         setModalVisible(false);
     }

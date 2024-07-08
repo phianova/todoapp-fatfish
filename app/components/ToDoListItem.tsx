@@ -11,10 +11,11 @@ import ToDoExpanded from "./ToDoExpanded";
 
 interface Props {
     todo: TodoItem,
-    expanded: boolean
+    expanded: boolean,
+    userEmail: string
 }
 
-export default function ToDoListItem({ todo, expanded }: Props) {
+export default function ToDoListItem({ todo, expanded, userEmail }: Props) {
 
     const id = todo._id;
     const client = new ApiClient();
@@ -30,7 +31,7 @@ export default function ToDoListItem({ todo, expanded }: Props) {
 
     //Actions
     const updateTodoCall = async (title: string, description: string, priority: number, dueDate: Date, completed: boolean) => {
-        await client.updateTodo(id, title, description, priority, dueDate, completed, "warrenova@outlook.com");
+        await client.updateTodo(id, title, description, priority, dueDate, completed, userEmail);
     };
 
     //Effects
@@ -52,7 +53,7 @@ export default function ToDoListItem({ todo, expanded }: Props) {
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             {isExpanded &&
-            <ToDoExpanded todo={todo} isChecked={isChecked}/>
+            <ToDoExpanded todo={todo} isChecked={isChecked} userEmail={userEmail}/>
             } 
             {!isExpanded &&
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>

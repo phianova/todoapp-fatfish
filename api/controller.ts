@@ -1,8 +1,6 @@
 import express from 'express';
 import Todo from './models/todo';
 import User from './models/user';
-// import { TodoRef } from './types';
-// import { TodoItem } from './types';
 
 export const addToDo = async function (req: express.Request, res: express.Response) {
     try {
@@ -98,6 +96,34 @@ export const updateToDo = async function (req: express.Request, res: express.Res
         return res.status(500).json({
             success: false,
             message: 'Todo update failed',
+            error: error
+        });
+    }
+}
+
+export const addUser = async function (req: express.Request, res: express.Response) {
+    try {
+        const { email } = req.body;
+        console.log("email in API controller", email);
+        const user = new User({
+            email,
+            todos: [],
+        });
+        console.log("user in API controller", user);
+        await user.save().catch((err) => {
+            console.log(err);
+        })
+
+        return res.status(201).json({
+            success: true,
+            message: 'User created successfully',
+            data: user
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'User creation failed',
             error: error
         });
     }

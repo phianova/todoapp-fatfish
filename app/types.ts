@@ -12,7 +12,6 @@ export interface TodoItem {
 // Define type for user
 export interface User {
     _id: string;
-    name: string;
     email: string;
     todos: TodoRef[];
 }
@@ -20,4 +19,11 @@ export interface User {
 // Define type for todo item reference
 export interface TodoRef {
     refId: TodoItem;
+}
+
+// Define type for token cache
+export interface TokenCache {
+    getToken: (key: string) => Promise<string | undefined | null>;
+    saveToken: (key: string, token: string) => Promise<void>;
+    clearToken?: (key: string) => void;
 }

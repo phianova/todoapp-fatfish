@@ -8,10 +8,11 @@ import ToDoListItem from "./ToDoListItem";
 // Types
 interface Props {
     todos: TodoItem[],
-    listTitle: string
+    listTitle: string,
+    userEmail: string
 }
 
-export default function ListContainer({ todos, listTitle }: Props) {
+export default function ListContainer({ todos, listTitle, userEmail }: Props) {
 // View
     if (todos.length === 0) {
         return (
@@ -25,7 +26,7 @@ export default function ListContainer({ todos, listTitle }: Props) {
         return (
             <View >
                 <Text>{listTitle}</Text>
-                <ToDoListItem key={todos[0]._id} todo={todos[0]} expanded={false} />
+                <ToDoListItem key={todos[0]._id} todo={todos[0]} expanded={false} userEmail={userEmail}/>
             </View>
         );
     }
@@ -34,7 +35,7 @@ export default function ListContainer({ todos, listTitle }: Props) {
             <View >
                 <Text>{listTitle}</Text>
                 {todos.map((todo, index) => (
-                    <ToDoListItem key={index} todo={todo} expanded={false} />
+                    <ToDoListItem key={index} todo={todo} expanded={false} userEmail={userEmail}/>
                 ))}
             </View>
         );

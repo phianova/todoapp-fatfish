@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 
 const user = new mongoose.Schema<User>({
     // id: { type: mongoose.Schema.Types.ObjectId, required: false },
-    name: { type: String, required: true },
     email: { type: String, required: true },
     todos: [{
         refId: { type: mongoose.Schema.Types.ObjectId, ref: "Todo"},
