@@ -4,8 +4,8 @@ export interface TodoItem {
     title: string;
     description: string;
     priority: number;
-    createdDate: Date;
-    dueDate: Date;
+    createdDate: string;
+    dueDate: string;
     completed: boolean;
 }
 
@@ -26,4 +26,27 @@ export interface TokenCache {
     getToken: (key: string) => Promise<string | undefined | null>;
     saveToken: (key: string, token: string) => Promise<void>;
     clearToken?: (key: string) => void;
+}
+
+export interface AddFormData {
+    title: string,
+    description: string,
+    priority: number,
+    dueDate: string,
+    userEmail: string,
+}
+
+export interface UpdateFormData {
+    _id: string,
+    title: string,
+    description: string,
+    priority: number,
+    dueDate: string,
+    userEmail: string,
+    completed: boolean,
+}
+
+export interface DeleteFormData {
+    _id: string,
+    userEmail: string,
 }

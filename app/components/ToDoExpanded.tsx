@@ -1,25 +1,33 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 import { View, Text, Button, TextInput } from "react-native";
-import type { TodoItem } from "../utils/types";
+import type { TodoItem, UpdateFormData, DeleteFormData } from "../utils/types";
 import { useForm } from "react-hook-form";
 
-import ApiClient from "../utils/ApiClient";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { updateTodo, deleteTodo } from "../state/todoSlice";
+
 import formatLongDate from "../utils/dates";
 
 // Types
 interface Props {
     todo: TodoItem,
     isChecked: boolean,
-    userEmail: string
 }
 interface FormData {
     title: string;
     description: string;
     priority: number;
-    dueDate: Date;
+    dueDate: string;
 }
-export default function ToDoExpanded({ todo, isChecked, userEmail }: Props) {
+export default function ToDoExpanded({ todo, isChecked }: Props) {
+    const userEmail = useAppSelector((state) => state.users.userEmail);
+    const dueDate = formatLongDate(todo.dueDate.toString());
+    const id = todo._id;
+    const priorityColour = (todo.priority === 1) ? "red" : ((todo.priority === 2) ? "yellow" : (todo.priority === 3) ? "green" : "transparent");
+
+    const dispatch = useAppDispatch();
+
     const { setValue, handleSubmit, register } = useForm<FormData>(
         {
             defaultValues: {
@@ -30,10 +38,6 @@ export default function ToDoExpanded({ todo, isChecked, userEmail }: Props) {
             }
         }
     );
-    const dueDate = formatLongDate(todo.dueDate.toString());
-    const id = todo._id;
-    const client = new ApiClient();
-    const priorityColour = (todo.priority === 1) ? "red" : ((todo.priority === 2) ? "yellow" : (todo.priority === 3) ? "green" : "transparent");
 
     // State
     const [isEditMode, setEditMode] = useState(false);
@@ -56,19 +60,26 @@ export default function ToDoExpanded({ todo, isChecked, userEmail }: Props) {
             formData.priority = todo.priority;
         }
 
-        console.log(formData);
-        updateTodoCall(formData.title, formData.description, formData.priority, formData.dueDate, isChecked);
+        const updateData : UpdateFormData = {
+            _id: id,
+            title: formData.title,
+            description: formData.description,
+            priority: formData.priority,
+            dueDate: formData.dueDate,
+            completed: isChecked,
+            userEmail: userEmail
+        }
+        dispatch(updateTodo(updateData));
         setEditMode(false);
     }, []);
 
-    const updateTodoCall = async (title: string, description: string, priority: number, dueDate: Date, completed: boolean) => {
-        console.log("id: ", id);
-        await client.updateTodo(id, title, description, priority, dueDate, completed, userEmail);
+    const onDelete = () => {
+        const deleteData : DeleteFormData = {
+            _id: id,
+            userEmail: userEmail
+        }
+        dispatch(deleteTodo(deleteData));
     };
-
-    const deleteToDoCall = async () => {
-        await client.deleteTodo(id, userEmail);
-    }
 
     const onChangeField = useCallback((name: string) => (text: string) => {
         setValue(name as ("title" | "description" | "priority" | "dueDate"), text);
@@ -135,7 +146,7 @@ export default function ToDoExpanded({ todo, isChecked, userEmail }: Props) {
                     )}
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <Button title={editButtonTitle} onPress={() => setEditMode(!isEditMode)}></Button>
-                        <Button title="Delete" onPress={() => deleteToDoCall()}></Button>
+                        <Button title="Delete" onPress={onDelete}></Button>
                         {isEditMode &&
                             <Button title="Save" onPress={handleSubmit(onSubmit)}></Button>
                         }

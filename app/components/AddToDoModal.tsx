@@ -1,8 +1,9 @@
 import { Modal, View, TextInput, Button, Text } from "react-native";
 import React, { useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
-
-import ApiClient from "../utils/ApiClient";
+import { addTodo } from "../state/todoSlice";
+import { AddFormData } from "../utils/types";
+import { useAppDispatch } from "../state/hooks";
 
 // Types 
 interface Props {
@@ -14,33 +15,23 @@ interface FormData {
     title: string;
     description: string;
     priority: number;
-    dueDate: Date;
+    dueDate: string;
 }
 
 export default function AddToDoModal({ modalVisible, setModalVisible, userEmail }:Props) {
     const { setValue, handleSubmit, register } = useForm<FormData>();
-    const client = new ApiClient();
-
-    console.log("in modal", userEmail)
-
+    const dispatch = useAppDispatch();
 
     // Actions
     const onSubmit = useCallback((formData: FormData) => {
-        console.log(formData);
-        addTodoCall(formData.title, formData.description, formData.priority, formData.dueDate);
+        const addFormData: AddFormData = { ...formData, userEmail };
+        dispatch(addTodo(addFormData));
         setModalVisible(false);
     }, []);
 
     const onChangeField = useCallback((name: string) => (text: string) => {
         setValue(name as ("title" | "description" | "priority" | "dueDate"), text);
       }, []);
-
-    const addTodoCall = async (title: string, description: string, priority: number, dueDate: Date) => {
-        console.log(userEmail)
-        await client.addTodo(title, description, priority, dueDate, userEmail);
-        console.log("todo added");
-        setModalVisible(false);
-    }
 
     // Effects
     useEffect(() => {

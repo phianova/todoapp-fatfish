@@ -5,34 +5,32 @@ import type { TodoItem } from "../utils/types";
 import Checkbox from 'expo-checkbox';
 import formatShortDate from "../utils/dates";
 
-import ApiClient from "../utils/ApiClient";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { updateTodo } from "../state/todoSlice";
+import { UpdateFormData } from "../utils/types";
+
 
 import ToDoExpanded from "./ToDoExpanded";
 
 interface Props {
     todo: TodoItem,
     expanded: boolean,
-    userEmail: string
 }
 
-export default function ToDoListItem({ todo, expanded, userEmail }: Props) {
+export default function ToDoListItem({ todo, expanded }: Props) {
 
     const id = todo._id;
-    const client = new ApiClient();
     const dueDate = formatShortDate(todo.dueDate.toString());
     const priorityColour = (todo.priority === 1) ? "red" : ((todo.priority === 2) ? "yellow" : (todo.priority === 3) ? "green" : "transparent");
     const isFirstRender = useRef(true);
+
+    const dispatch = useAppDispatch();
+    const userEmail = useAppSelector((state) => state.users.userEmail);
 
     // State
     const [completedStyle, setCompletedStyle] = useState("none" as "line-through" | "none" | "underline" | "underline line-through" | undefined);
     const [isChecked, setChecked] = useState(todo.completed);
     const [isExpanded, setExpanded] = useState(expanded);
-    const [isCompleted, setCompleted] = useState(todo.completed);
-
-    //Actions
-    const updateTodoCall = async (title: string, description: string, priority: number, dueDate: Date, completed: boolean) => {
-        await client.updateTodo(id, title, description, priority, dueDate, completed, userEmail);
-    };
 
     //Effects
     useEffect(() => {
@@ -44,8 +42,16 @@ export default function ToDoListItem({ todo, expanded, userEmail }: Props) {
         if (isFirstRender.current) {
             isFirstRender.current = false;
         } else {
-            setCompleted(isChecked);
-            updateTodoCall(todo.title, todo.description, todo.priority, todo.dueDate, isCompleted);
+            const updateData : UpdateFormData = {
+                _id: id,
+                title: todo.title,
+                description: todo.description,
+                priority: todo.priority,
+                dueDate: todo.dueDate,
+                completed: isChecked,
+                userEmail: userEmail
+            }
+            dispatch(updateTodo(updateData));
         }
     }, [isChecked]);
 
@@ -53,7 +59,7 @@ export default function ToDoListItem({ todo, expanded, userEmail }: Props) {
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             {isExpanded &&
-            <ToDoExpanded todo={todo} isChecked={isChecked} userEmail={userEmail}/>
+            <ToDoExpanded todo={todo} isChecked={isChecked}/>
             } 
             {!isExpanded &&
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>

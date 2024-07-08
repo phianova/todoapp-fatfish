@@ -43,7 +43,6 @@ export default function SignUpScreen() {
       if (completeSignUp.status === 'complete') {
         await setActive({ session: completeSignUp.createdSessionId });
         await client.addUser(emailAddress);
-        console.log("Sign up complete");
         router.replace('/');
       } else {
         console.error(completeSignUp.status);
