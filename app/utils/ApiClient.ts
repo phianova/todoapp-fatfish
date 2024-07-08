@@ -67,4 +67,19 @@ export default class ApiClient {
         });
     }
 
+    async addUser(userEmail: string) {
+        console.log(userEmail);
+        return await axios({
+            method: 'POST',
+            url: `${url}/adduser`,
+            data: {
+                email: userEmail
+            }
+        }).then((res) => {
+            return res.data;
+        }).catch((err) => {
+            return err.response.data;
+        });
+    }
+
 }

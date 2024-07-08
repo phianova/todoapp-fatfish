@@ -13,7 +13,6 @@ export interface TodoItem {
 // Define type for user
 export interface User {
     _id: mongoose.Schema.Types.ObjectId;
-    name: string;
     email: string;
     todos: TodoRef[];
 }

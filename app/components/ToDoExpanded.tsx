@@ -10,7 +10,8 @@ import formatLongDate from "../utils/dates";
 // Types
 interface Props {
     todo: TodoItem,
-    isChecked: boolean
+    isChecked: boolean,
+    userEmail: string
 }
 interface FormData {
     title: string;
@@ -18,7 +19,7 @@ interface FormData {
     priority: number;
     dueDate: Date;
 }
-export default function ToDoExpanded({ todo, isChecked }: Props) {
+export default function ToDoExpanded({ todo, isChecked, userEmail }: Props) {
     const { setValue, handleSubmit, register } = useForm<FormData>(
         {
             defaultValues: {
@@ -62,11 +63,11 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
 
     const updateTodoCall = async (title: string, description: string, priority: number, dueDate: Date, completed: boolean) => {
         console.log("id: ", id);
-        await client.updateTodo(id, title, description, priority, dueDate, completed, "warrenova@outlook.com");
+        await client.updateTodo(id, title, description, priority, dueDate, completed, userEmail);
     };
 
     const deleteToDoCall = async () => {
-        await client.deleteTodo(id, "warrenova@outlook.com");
+        await client.deleteTodo(id, userEmail);
     }
 
     const onChangeField = useCallback((name: string) => (text: string) => {

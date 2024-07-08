@@ -1,11 +1,12 @@
 import { Button, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
+import { SignedIn, SignedOut, useUser, useClerk } from "@clerk/clerk-expo";
+import ListContainer from "../../components/ListContainer";
+import AddToDoModal from "../../components/AddToDoModal";
+import ApiClient from "../../utils/ApiClient";
+import { Link } from "expo-router"
 
-import ListContainer from "../components/ListContainer";
-import AddToDoModal from "../components/AddToDoModal";
-import ApiClient from "../utils/ApiClient";
-
-import type { TodoItem } from "../types";
+import type { TodoItem } from "../../types";
 
 
 export default function Index() {
@@ -16,10 +17,13 @@ export default function Index() {
   const [todos, setTodos] = useState<TodoItem[]>([]);
 
   const client = new ApiClient;
+  const { user } = useUser();
+  const userEmail = user?.emailAddresses[0].emailAddress || "";
+  const { signOut } = useClerk();
 
   // Actions
   const refreshTodos = async () => {
-    await client.getTodos("warrenova@outlook.com")
+    await client.getTodos(userEmail)
       .then((todos) => {
         setLoading(false);
         setTodos(todos);
@@ -56,23 +60,34 @@ export default function Index() {
 
 // View
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text style={{ fontSize: 28, lineHeight: 32, marginTop: 6 }}>To Do</Text>
+    <View style={{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    }}>
+    <SignedIn>
+    <View>
+      <Text style={{ fontSize: 28, lineHeight: 32, marginTop: 6 }}>Hello {user?.primaryEmailAddress?.emailAddress}</Text>
       {loading && <Text>Loading...</Text>}
       {!loading &&
         <>
-          <ListContainer todos={todayTodos()} listTitle="Today" />
-          <ListContainer todos={todos} listTitle="All to-dos" />
+          <ListContainer todos={todayTodos()} listTitle="Today" userEmail={userEmail}/>
+          <ListContainer todos={todos} listTitle="All to-dos" userEmail={userEmail}/>
         </>
       }
       <Button title="Add To Do" onPress={() => setModalVisible(true)}></Button>
-      {modalVisible && <AddToDoModal modalVisible={modalVisible} setModalVisible={setModalVisible} />}
+      {modalVisible && <AddToDoModal modalVisible={modalVisible} setModalVisible={setModalVisible} userEmail={userEmail} />}
+      <Button title="Sign out" onPress={() => signOut()}></Button>
+    </View>
+    </SignedIn>
+    <SignedOut>
+      <Link href="/sign-in">
+        Sign in
+      </Link>
+      <Link href="/sign-up">
+        Sign up
+      </Link>
+    </SignedOut>
     </View>
   );
 }
