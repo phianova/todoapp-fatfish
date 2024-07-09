@@ -28,7 +28,7 @@ export default function Index() {
   useEffect(() => {
     dispatch(fetchTodos(userEmail));
     dispatch(fetchTodayTodos(userEmail));
-  }, [userEmail])
+  }, [])
 
   const onPressSignOut = async () => {
     await signOut();
@@ -46,7 +46,7 @@ export default function Index() {
     <View>
       <Text style={{ fontSize: 28, lineHeight: 32, marginTop: 6 }}>Hello {user?.primaryEmailAddress?.emailAddress}</Text>
       {(loading == "loading") && <Text>Loading...</Text>}
-      {(loading == "succeeded") &&
+      {(loading == "succeeded") && todos &&
         <>
           <ListContainer todos={todayTodos} listTitle="Today"/>
           <ListContainer todos={todos} listTitle="All to-dos"/>
