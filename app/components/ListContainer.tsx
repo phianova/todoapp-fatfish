@@ -2,7 +2,7 @@ import React from "react";
 
 import { View, Text } from "react-native";
 import type { TodoItem } from "../utils/types";
-import ToDoListItem from "./ToDoListItem";
+import TodoListItem from "./TodoListItem";
 
 // Types
 interface Props {
@@ -20,7 +20,7 @@ export default function ListContainer({ todos, listTitle }: Props) {
                 <Text>No todos</Text>
             ) : (
                 todos.map((todo) => (
-                    <ToDoListItem key={todo._id} todo={todo} expanded={false}/>
+                    <TodoListItem key={todo._id} todo={todo} expanded={false}/>
                 ))
             )
             }

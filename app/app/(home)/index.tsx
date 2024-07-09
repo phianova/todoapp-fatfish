@@ -2,7 +2,7 @@ import { Button, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SignedIn, SignedOut, useUser, useClerk } from "@clerk/clerk-expo";
 import ListContainer from "../../components/ListContainer";
-import AddToDoModal from "../../components/AddToDoModal";
+import AddTodoModal from "../../components/AddTodoModal";
 import { Link } from "expo-router";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { fetchTodos, fetchTodayTodos } from "../../state/todoSlice";
@@ -53,7 +53,7 @@ export default function Index() {
         </>
       }
       <Button title="Add To Do" onPress={() => setModalVisible(true)}></Button>
-      {modalVisible && <AddToDoModal modalVisible={modalVisible} setModalVisible={setModalVisible} userEmail={userEmail} />}
+      {modalVisible && <AddTodoModal modalVisible={modalVisible} setModalVisible={setModalVisible} userEmail={userEmail} />}
       <Button title="Sign out" onPress={onPressSignOut}></Button>
     </View>
     </SignedIn>

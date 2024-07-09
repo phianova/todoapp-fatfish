@@ -18,7 +18,7 @@ interface FormData {
     dueDate: string;
 }
 
-export default function AddToDoModal({ modalVisible, setModalVisible, userEmail }:Props) {
+export default function AddTodoModal({ modalVisible, setModalVisible, userEmail }:Props) {
     const { setValue, handleSubmit, register } = useForm<FormData>();
     const dispatch = useAppDispatch();
 

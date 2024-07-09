@@ -20,7 +20,7 @@ interface FormData {
     priority: number;
     dueDate: string;
 }
-export default function ToDoExpanded({ todo, isChecked }: Props) {
+export default function TodoExpanded({ todo, isChecked }: Props) {
     const userEmail = useAppSelector((state) => state.users.userEmail);
     const dueDate = formatLongDate(todo.dueDate.toString());
     const id = todo._id;

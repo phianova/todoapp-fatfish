@@ -10,14 +10,14 @@ import { updateTodo } from "../state/todoSlice";
 import { UpdateFormData } from "../utils/types";
 
 
-import ToDoExpanded from "./ToDoExpanded";
+import TodoExpanded from "./TodoExpanded";
 
 interface Props {
     todo: TodoItem,
     expanded: boolean,
 }
 
-export default function ToDoListItem({ todo, expanded }: Props) {
+export default function TodoListItem({ todo, expanded }: Props) {
 
     const id = todo._id;
     const dueDate = formatShortDate(todo.dueDate.toString());
@@ -59,7 +59,7 @@ export default function ToDoListItem({ todo, expanded }: Props) {
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             {isExpanded &&
-            <ToDoExpanded todo={todo} isChecked={isChecked}/>
+            <TodoExpanded todo={todo} isChecked={isChecked}/>
             } 
             {!isExpanded &&
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
