@@ -1,10 +1,10 @@
 import express from 'express';
-import { addToDo, getToDos, deleteToDo, updateToDo, addUser } from './controller';
+import { addTodo, getTodos, deleteTodo, updateTodo, addUser } from './controller';
 
 export const router = express.Router();
 
-router.get('/get/:userEmail', getToDos);
-router.post('/add', addToDo);
-router.delete('/delete/:id', deleteToDo);
-router.put('/update/:id', updateToDo);
+router.get('/get/:userEmail', getTodos);
+router.post('/add', addTodo);
+router.delete('/delete/:id', deleteTodo);
+router.put('/update/:id', updateTodo);
 router.post('/adduser', addUser);

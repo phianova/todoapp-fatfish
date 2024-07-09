@@ -2,7 +2,7 @@ import express from 'express';
 import Todo from './models/todo';
 import User from './models/user';
 
-export const addToDo = async function (req: express.Request, res: express.Response) {
+export const addTodo = async function (req: express.Request, res: express.Response) {
     try {
         const { title, description, priority, dueDate, userEmail } = req.body;
         const createdDate = new Date();
@@ -18,10 +18,10 @@ export const addToDo = async function (req: express.Request, res: express.Respon
 
         await todo.save();
 
-        const findToDoId = await Todo.findOne({ _id: todo._id });
-        const newToDoRef = { refId: findToDoId?._id };
+        const findTodoId = await Todo.findOne({ _id: todo._id });
+        const newTodoRef = { refId: findTodoId?._id };
 
-        await User.findOneAndUpdate({ email: userEmail }, { $push: { todos: newToDoRef } });
+        await User.findOneAndUpdate({ email: userEmail }, { $push: { todos: newTodoRef } });
 
         return res.status(201).json({
             success: true,
@@ -38,7 +38,7 @@ export const addToDo = async function (req: express.Request, res: express.Respon
     }
 }
 
-export const getToDos = async function (req: express.Request, res: express.Response) {
+export const getTodos = async function (req: express.Request, res: express.Response) {
     try {
         const user = await User.findOne({ email: req.params.userEmail }).populate('todos.refId');
         if (!user) {
@@ -64,7 +64,7 @@ export const getToDos = async function (req: express.Request, res: express.Respo
     }
 }
 
-export const deleteToDo = async function (req: express.Request, res: express.Response) {
+export const deleteTodo = async function (req: express.Request, res: express.Response) {
     try {
         const id = req.params.id;
         await Todo.deleteOne({ _id: id });
@@ -83,7 +83,7 @@ export const deleteToDo = async function (req: express.Request, res: express.Res
     }
 }
 
-export const updateToDo = async function (req: express.Request, res: express.Response) {
+export const updateTodo = async function (req: express.Request, res: express.Response) {
     try {
         const id = req.params.id;
         const { title, description, priority, completed, dueDate } = req.body;
