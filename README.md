@@ -8,7 +8,7 @@ Simple to do list app for technical assessment for Fat Fish Digital
 - The API is deployed to Serverless at: https://4wgjp9tm5d.execute-api.eu-west-1.amazonaws.com/dev/, which the app should already be configured to call.
 - Run `npm install` in each of `/api` and `/app` to download the requisite packages in your local environment.
 - The app can be run from within `/app` using the command `npx expo start` and pressing `a` when prompted to run it in your emulator.
-- The Clerk publishable key SHOULD be build into the development build env, but just in case it doesn't pull through when run locally (i.e. you get the error "Missing Publishable Key"), please create a `.env` file in your `/app` directory and add the following to ensure the auth works as expected:
+- The Clerk publishable key SHOULD be built into the development build env, but just in case it doesn't pull through when run locally (i.e. you get the error "Missing Publishable Key"), please create a `.env` file in your `/app` directory and add the following to ensure the auth works as expected:
 `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_bWFpbi1zbmFrZS0xOC5jbGVyay5hY2NvdW50cy5kZXYk`
 
 ## Project overview:
