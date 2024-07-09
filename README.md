@@ -75,6 +75,8 @@ Things I would change/add:
 - Structure the app using Redux principles from the start
 - Extend authentication to properly protect the backend API routes
 - Format due dates better - I had to remove the "Date" type in the frontend to be able to store it in Redux and didn't have time to work out a way to ensure the user still entered a valid date
+- At the time of writing there is a bug with the "Today" list whereby they don't stay checked when you check the box!
+I think this is due to an issue with the state management, likely because I'm fetching the list of today's todos too quickly after the checkbox updates the state. With more time I'd structure the state management for the "today's to dos" a bit differently to avoid this.
 
 **The assessment task is below for reference.**
 *Assessment Brief:*

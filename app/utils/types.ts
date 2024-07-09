@@ -1,4 +1,4 @@
-// Define type for todo item
+// Type for todo item received from backend
 export interface TodoItem {
     _id: string;
     title: string;
@@ -9,25 +9,27 @@ export interface TodoItem {
     completed: boolean;
 }
 
-// Define type for user
+// Type for user received from backend
 export interface User {
     _id: string;
     email: string;
     todos: TodoRef[];
 }
 
-// Define type for todo item reference
+// Type for todo reference received from backend
 export interface TodoRef {
     refId: TodoItem;
 }
 
-// Define type for token cache
+// Type for Clerk/Expo Secure Store token cache
 export interface TokenCache {
     getToken: (key: string) => Promise<string | undefined | null>;
     saveToken: (key: string, token: string) => Promise<void>;
     clearToken?: (key: string) => void;
 }
 
+//// Types for form data
+// Type for data to be passed to addTodo
 export interface AddFormData {
     title: string,
     description: string,
@@ -35,7 +37,7 @@ export interface AddFormData {
     dueDate: string,
     userEmail: string,
 }
-
+// Type for data to be passed to updateTodo
 export interface UpdateFormData {
     _id: string,
     title: string,
@@ -45,7 +47,7 @@ export interface UpdateFormData {
     userEmail: string,
     completed: boolean,
 }
-
+// Type for data to be passed to deleteTodo
 export interface DeleteFormData {
     _id: string,
     userEmail: string,

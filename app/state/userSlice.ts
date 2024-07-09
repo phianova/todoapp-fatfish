@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+// Type for User state
 interface UserState {
     userEmail: string,
     status: 'idle' | 'loading' | 'succeeded' | 'failed',
 }
-
+// Initial state for User
 const initialState = {
     userEmail: "emailNotSet",
     status: 'idle',

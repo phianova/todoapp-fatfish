@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
-
 import { View, Text, Button, TextInput, StyleSheet } from "react-native";
 import type { TodoItem, UpdateFormData, DeleteFormData } from "../utils/types";
 import { useForm } from "react-hook-form";
-
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { updateTodo, deleteTodo } from "../state/todoSlice";
-import { fetchTodayTodos } from "../state/todayTodoSlice";
+import { formatLongDate } from "../utils/dates";
 
-import formatLongDate from "../utils/dates";
-
-// Types
+//// Types
 interface Props {
     todo: TodoItem,
     isChecked: boolean,
@@ -22,12 +18,11 @@ interface FormData {
     dueDate: string;
 }
 export default function ToDoExpanded({ todo, isChecked }: Props) {
-    const userEmail = useAppSelector((state) => state.users.userEmail);
+    //// Setup
     const dueDate = formatLongDate(todo.dueDate.toString());
     const id = todo._id;
-
     const dispatch = useAppDispatch();
-
+    // Form setup - make default values match current state
     const { setValue, handleSubmit, register } = useForm<FormData>(
         {
             defaultValues: {
@@ -39,12 +34,18 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
         }
     );
 
-    // State
+    //// State
+    // Global State
+    const userEmail = useAppSelector((state) => state.users.userEmail);
+    // Local State
     const [isEditMode, setEditMode] = useState(false);
     const [editButtonTitle, setEditButtonTitle] = useState("Edit");
     const [completedStyle, setCompletedStyle] = useState("none" as "line-through" | "none" | "underline" | "underline line-through" | undefined);
 
-    // Actions
+    //// Actions
+    // Submit form - updates todo in global state (which then gets todos from backend via thunk)
+    // Also checks for unintended blank or undefined input values
+    // Manually fetches today's todos after updating as these don't update automatically in update dispatch call
     const onSubmit = useCallback((formData: FormData) => {
         if (formData.title === "" || formData.title === undefined) {
             formData.title = todo.title;
@@ -69,10 +70,10 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
             userEmail: userEmail
         }
         dispatch(updateTodo(updateData));
-        dispatch(fetchTodayTodos(userEmail));
         setEditMode(false);
     }, []);
 
+    // Delete - deletes todo in global state (which then gets todos from backend via thunk)
     const onDelete = () => {
         const deleteData : DeleteFormData = {
             _id: id,
@@ -81,11 +82,13 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
         dispatch(deleteTodo(deleteData));
     };
 
+    // Field change - updates state of form elements with field values ( using react-hook-form )
     const onChangeField = useCallback((name: string) => (text: string) => {
         setValue(name as ("title" | "description" | "priority" | "dueDate"), text);
     }, []);
 
-    // Effects
+    //// Effects
+    // Changes button title and updates today's todos when edit mode is closed
     useEffect(() => {
         if (isEditMode) {
             setEditButtonTitle("Cancel");
@@ -94,6 +97,7 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
         }
     }, [isEditMode]);
 
+    // Changes completed style when checkbox is toggled
     useEffect(() => {
         if (isChecked) {
             setCompletedStyle("line-through");
@@ -102,12 +106,16 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
         }
     }, [isChecked]);
 
+    // Registers form field inputs with react-hook-form
     useEffect(() => {
         register("title");
         register("description");
         register("priority");
         register("dueDate");
     }, [register]);
+
+    // Manually fetches today's todos after updating as these don't update automatically in update dispatch call
+
 
     return (
         <View>

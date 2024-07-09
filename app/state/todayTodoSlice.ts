@@ -2,15 +2,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { TodoItem } from '../utils/types';
 import ApiClient from '../utils/ApiClient';
 
-const client = new ApiClient();
-
-// Define a type for the slice state
+// Type for Today Todos state
 interface TodayTodoState {
     todayTodos: TodoItem[],
     status: 'idle' | 'loading' | 'succeeded' | 'failed',
     error: string | null,
 }
 
+// Initial state for Today Todos
 const initialState = {
     todayTodos: [{
         _id: 'todosNotSet',
@@ -25,6 +24,10 @@ const initialState = {
     error: null
 } as TodayTodoState;
 
+const client = new ApiClient();
+
+// Using the "extraReducers" builder allows for use of async "thunk" calls to API
+// This keeps the state mapped directly to the database
 export const todayTodoSlice = createSlice({
     name: 'todo',
     initialState,
@@ -50,6 +53,7 @@ export const todayTodoSlice = createSlice({
 export default todayTodoSlice.reducer;
 
 export const fetchTodayTodos = createAsyncThunk('todos/fetchTodayTodos',
+    // Fetches todos and filters only those todos that are due today
     async (userEmail: string) => {
         const todos: TodoItem[] = await client.getTodos(userEmail)
         const todayArray: TodoItem[] = []

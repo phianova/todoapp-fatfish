@@ -5,14 +5,18 @@ import { useRouter } from "expo-router";
 import ApiClient from "../../utils/ApiClient";
 
 export default function SignUpScreen() {
+  //// Setup
   const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
   const client = new ApiClient();
 
+  //// State
   const [emailAddress, setEmailAddress] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
 
+  //// Actions
+  // Sign up - triggers Clerk to send email OTP
   const onSignUpPress = async () => {
     if (!isLoaded) {
       return;
@@ -28,7 +32,9 @@ export default function SignUpScreen() {
       console.error(err);
     }
   };
-
+  
+  // Verify - triggers Clerk to verify email OTP, create account and sign user in
+  // Also adds user to MongoDB database on success
   const onPressVerify = async () => {
     if (!isLoaded) {
       return;

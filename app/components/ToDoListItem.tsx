@@ -1,38 +1,39 @@
 import React, { useState, useEffect, useRef } from "react";
-
 import { View, Text, Button, StyleSheet } from "react-native";
 import type { TodoItem } from "../utils/types";
 import Checkbox from 'expo-checkbox';
-import formatShortDate from "../utils/dates";
-
+import { formatShortDate } from "../utils/dates";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { updateTodo } from "../state/todoSlice";
 import { UpdateFormData } from "../utils/types";
-
-
 import ToDoExpanded from "./ToDoExpanded";
 
+//// Types
 interface Props {
     todo: TodoItem,
     expanded: boolean,
 }
 
 export default function ToDoListItem({ todo, expanded }: Props) {
-
+    //// Setup
     const id = todo._id;
     const dueDate = formatShortDate(todo.dueDate.toString());
     const priorityColour = (todo.priority === 1) ? "lightcoral" : ((todo.priority === 2) ? "gold" : (todo.priority === 3) ? "lightgreen" : "transparent");
     const isFirstRender = useRef(true);
-
     const dispatch = useAppDispatch();
-    const userEmail = useAppSelector((state) => state.users.userEmail);
 
-    // State
+    //// State
+    // Global State
+    const userEmail = useAppSelector((state) => state.users.userEmail);
+    // Local State
     const [completedStyle, setCompletedStyle] = useState("none" as "line-through" | "none" | "underline" | "underline line-through" | undefined);
     const [isChecked, setChecked] = useState(todo.completed);
     const [isExpanded, setExpanded] = useState(expanded);
 
-    //Effects
+    //// Effects
+    // Updates todos in global state when checkbox status changes
+    // Also updates text style to reflect completed status
+    // Check for first render ensures todo is not updated erroneously if component is rendered with todo already completed
     useEffect(() => {
         if (isChecked) {
             setCompletedStyle("line-through");
@@ -55,7 +56,6 @@ export default function ToDoListItem({ todo, expanded }: Props) {
         }
     }, [isChecked]);
 
-    //View
     return (
         <View style={{ ...styles.container, backgroundColor: priorityColour }}>
             {isExpanded &&

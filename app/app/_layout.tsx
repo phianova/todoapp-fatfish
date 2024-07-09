@@ -5,6 +5,7 @@ import { store } from "../state/store";
 import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 
+// Clerk token cache implementation using Expo Secure Store
 const tokenCache = {
   async getToken(key: string) {
     try {
@@ -30,13 +31,13 @@ const tokenCache = {
   },
 };
 
-
+// Checks .env for publishable key
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY || "";
-
 if (!publishableKey) {
   throw new Error("Missing publishable key");
 }
 
+// Root layout wrapped in Provider for state store, which is wrapped in Clerk Provider for auth
 export default function RootLayout() {
   return (
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>

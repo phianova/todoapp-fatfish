@@ -2,9 +2,9 @@ import type { User } from '../types.ts';
 import mongoose from 'mongoose';
 
 const user = new mongoose.Schema<User>({
-    // id: { type: mongoose.Schema.Types.ObjectId, required: false },
     email: { type: String, required: true },
     todos: [{
+        // RefId populates with Todo records from todos collection
         refId: { type: mongoose.Schema.Types.ObjectId, ref: "Todo"},
     }]
 });
