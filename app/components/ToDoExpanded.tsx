@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Text, Button, TextInput, StyleSheet } from "react-native";
 import type { TodoItem, UpdateFormData, DeleteFormData } from "../utils/types";
 import { useForm } from "react-hook-form";
 
@@ -24,7 +24,6 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
     const userEmail = useAppSelector((state) => state.users.userEmail);
     const dueDate = formatLongDate(todo.dueDate.toString());
     const id = todo._id;
-    const priorityColour = (todo.priority === 1) ? "red" : ((todo.priority === 2) ? "yellow" : (todo.priority === 3) ? "green" : "transparent");
 
     const dispatch = useAppDispatch();
 
@@ -115,22 +114,22 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
                 <View style={{ flexDirection: "column", justifyContent: "space-between", alignItems: "flex-start" }}>
                     {isEditMode && (
                         <>
-                            <TextInput style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour, fontWeight: "bold" }}
+                            <TextInput style={{...styles.title, textDecorationLine: completedStyle}}
                                 placeholder={todo.title}
                                 defaultValue={todo.title}
                                 onChangeText={onChangeField("title")}
                             />
-                            <TextInput style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}
+                            <TextInput style={styles.text}
                                 placeholder={dueDate}
                                 defaultValue={dueDate}
                                 onChangeText={onChangeField("dueDate")}
                             />
-                            <TextInput style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}
+                            <TextInput style={styles.text}
                                 placeholder={todo.description}
                                 defaultValue={todo.description}
                                 onChangeText={onChangeField("description")}
                             />
-                            <TextInput style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}
+                            <TextInput style={styles.text}
                                 placeholder={todo.priority.toString()}
                                 defaultValue={todo.priority.toString()}
                                 onChangeText={onChangeField("priority")}
@@ -139,16 +138,16 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
                     )}
                     {!isEditMode && (
                         <>
-                            <Text style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour, fontWeight: "bold" }}>{todo.title}</Text>
-                            <Text style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}>Due: {dueDate}</Text>
-                            <Text style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}>{todo.description}</Text>
+                            <Text style={{ ...styles.title, textDecorationLine: completedStyle }}>{todo.title}</Text>
+                            <Text style={styles.text}>Due: {dueDate}</Text>
+                            <Text style={styles.text}>{todo.description}</Text>
                         </>
                     )}
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                        <Button title={editButtonTitle} onPress={() => setEditMode(!isEditMode)}></Button>
-                        <Button title="Delete" onPress={onDelete}></Button>
+                    <View style={styles.buttonContainer}>
+                        <Button color="orange" title={editButtonTitle} onPress={() => setEditMode(!isEditMode)}></Button>
+                        <Button color="red"title="Delete" onPress={onDelete}></Button>
                         {isEditMode &&
-                            <Button title="Save" onPress={handleSubmit(onSubmit)}></Button>
+                            <Button color="green" title="Save" onPress={handleSubmit(onSubmit)}></Button>
                         }
                     </View>
                 </View>
@@ -157,3 +156,20 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    title: {
+        fontWeight: "bold",
+        padding: 3
+    },
+    text: {
+        padding: 3
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        marginVertical: 20,
+        gap: 20
+    }
+});

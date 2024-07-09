@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, Button, View } from "react-native";
+import { TextInput, Text, Button, View, StyleSheet } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import ApiClient from "../../utils/ApiClient";
@@ -53,28 +53,64 @@ export default function SignUpScreen() {
   };
 
   return (
-    <View>
+    <View style={styles.pageContent}>
+      <Text style={styles.text}>Sign Up</Text>
       {!pendingVerification && (
-        <>
+        <View style={styles.container}>
           <TextInput
+            style={styles.input}
             autoCapitalize="none"
             value={emailAddress}
             placeholder="Email..."
             onChangeText={(email) => setEmailAddress(email)}
           />
-          <Button title="Sign Up" onPress={onSignUpPress} />
-        </>
+          <Button color="green"title="Sign Up" onPress={onSignUpPress} />
+        </View>
       )}
       {pendingVerification && (
-        <>
+        <View style={styles.container}>
           <TextInput
+            style={styles.input}
             value={code}
             placeholder="Code..."
             onChangeText={(code) => setCode(code)}
           />
-          <Button title="Verify Email" onPress={onPressVerify} />
-        </>
+          <Button color="green" title="Verify Email" onPress={onPressVerify} />
+        </View>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  pageContent: {
+    flex: 1,
+    backgroundColor: "#fff",
+    margin: 10,
+    padding: 10,
+    alignItems: "center",
+  },
+  container: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginVertical: 20,
+    gap: 20
+  },
+  input: {
+    borderColor: "gray",
+    width: "100%",
+    borderRadius: 5,
+    backgroundColor: "lightgray",
+    borderWidth: 1,
+    padding: 5,
+},
+  text: {
+    fontSize: 18,
+    lineHeight: 40,
+    marginVertical: 5,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+});

@@ -1,4 +1,4 @@
-import { Button, Text, View } from "react-native";
+import { Button, Text, View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SignedIn, SignedOut, useUser, useClerk } from "@clerk/clerk-expo";
 import ListContainer from "../../components/ListContainer";
@@ -41,10 +41,12 @@ export default function Index() {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
+      height: "100%",
+      width: "100%"
     }}>
     <SignedIn>
-    <View>
-      <Text style={{ fontSize: 28, lineHeight: 32, marginTop: 6 }}>Hello {user?.primaryEmailAddress?.emailAddress}</Text>
+    <View style={styles.pageContent}>
+      <Text style={styles.title}>Hello {user?.primaryEmailAddress?.emailAddress}</Text>
       {(loading == "loading") && <Text>Loading...</Text>}
       {(loading == "succeeded") && todos &&
         <>
@@ -52,19 +54,55 @@ export default function Index() {
           <ListContainer todos={todos} listTitle="All to-dos"/>
         </>
       }
-      <Button title="Add To Do" onPress={() => setModalVisible(true)}></Button>
+      <View style={styles.buttonContainer}>
+      <Button color="green" title="Add To Do" onPress={() => setModalVisible(true)}></Button>
       {modalVisible && <AddToDoModal modalVisible={modalVisible} setModalVisible={setModalVisible} userEmail={userEmail} />}
-      <Button title="Sign out" onPress={onPressSignOut}></Button>
+      <Button color="gray" title="Sign out" onPress={onPressSignOut}></Button>
+      </View>
     </View>
     </SignedIn>
     <SignedOut>
-      <Link href="/sign-in">
+      <Link style={styles.authLink} href="/sign-in">
         Sign in
       </Link>
-      <Link href="/sign-up">
+      <Link style={styles.authLink} href="/sign-up">
         Sign up
       </Link>
     </SignedOut>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  pageContent: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    width: "100%",
+  },
+  buttonContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginVertical: 20,
+    gap: 20
+  
+  },
+  title: {
+    fontSize: 20,
+    lineHeight: 40,
+    marginVertical: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  authLink: {
+    fontWeight: "bold",
+    fontSize: 20,
+    lineHeight: 40,
+    backgroundColor: "lightblue",
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5
+  }
+});
