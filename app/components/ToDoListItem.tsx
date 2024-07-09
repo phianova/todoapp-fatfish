@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
 import type { TodoItem } from "../utils/types";
 import Checkbox from 'expo-checkbox';
 import formatShortDate from "../utils/dates";
@@ -21,7 +21,7 @@ export default function ToDoListItem({ todo, expanded }: Props) {
 
     const id = todo._id;
     const dueDate = formatShortDate(todo.dueDate.toString());
-    const priorityColour = (todo.priority === 1) ? "red" : ((todo.priority === 2) ? "yellow" : (todo.priority === 3) ? "green" : "transparent");
+    const priorityColour = (todo.priority === 1) ? "lightcoral" : ((todo.priority === 2) ? "gold" : (todo.priority === 3) ? "lightgreen" : "transparent");
     const isFirstRender = useRef(true);
 
     const dispatch = useAppDispatch();
@@ -57,14 +57,14 @@ export default function ToDoListItem({ todo, expanded }: Props) {
 
     //View
     return (
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+        <View style={{ ...styles.container, backgroundColor: priorityColour }}>
             {isExpanded &&
             <ToDoExpanded todo={todo} isChecked={isChecked}/>
             } 
             {!isExpanded &&
-                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-                    <Text style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}>{todo.title}</Text>
-                    <Text style={{ textDecorationLine: completedStyle, backgroundColor: priorityColour }}>{dueDate}</Text>
+                <View style={styles.itemContent}>
+                    <Text style={{ ...styles.title, textDecorationLine: completedStyle}}>{todo.title}</Text>
+                    <Text>{dueDate}</Text>
                 </View>
             }
             <Checkbox value={isChecked} onValueChange={() => setChecked(!isChecked)} />
@@ -72,3 +72,25 @@ export default function ToDoListItem({ todo, expanded }: Props) {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    title: {
+        fontWeight: "bold",
+    },
+    container: {
+        flexDirection: "row",
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "space-around",
+        padding: 5,
+        borderRadius: 5,
+    },
+    itemContent: {
+        flexDirection: "row",
+        fontSize: 20,
+        fontWeight: "bold",
+        justifyContent: "space-around",
+        gap: 20,
+        alignItems: "center",
+    },
+});
