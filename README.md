@@ -33,13 +33,17 @@ Desired functionality on top of CRUD:
 ## Thoughts on:
 
 ### Data storage
-I went with a MongoDB database - partly because of familiarity, but partly because I felt the JSON-style data storage would make more sense for the todo objects than a relational database would. However, having wrestled a bit with Mongo's interactions with Serverless, I think on balance I would choose DynamoDB if I did this again!
+I went with a MongoDB database - partly because of familiarity, but partly because I felt the JSON-style data storage would make more sense for the todo objects than a relational database would. 
+However, having wrestled a bit with Mongo's interactions with Serverless, I think on balance I would choose DynamoDB if I did this again!
+This was also my first time using Redux for state management. I think had I fully understood its capabilities from the start I would have streamlined my project a bit more in terms of how my API calls were made to update the state.
 
 ### Auth
-I went with the principle of "never build your own auth" and used Kinde. They have a React Native SDK making integration relatively easy and their service works really well if you have a straightforward setup like this one.
+I went with the principle of "never build your own auth" and started out trying to use Kinde, which I've used before. They have a React Native SDK and their prebuilt sign-up/sign-in pages work really well if you have a straightforward setup like this one. However, it seems their React Native/Expo SDKs are experiencing an ongoing bug at the moment, and they're soon to release a new Expo version. Given this (and the fact I immediately encountered said bug), I quickly got to grips with Clerk - which I actually found to be a lot better documented and still very user-friendly.
 
 ### Automated testing
-I used Jest with Supatest for testing.
+I set up Jest to create snapshot tests and unit tests for my frontend components. However, I unfortunately ran into an issue with my Jest configuration such that I wasn't able to get my frontend testing suite to work in time. It seems like a well-documented issue but there should be a resolution (see here, and other linked posts on StackOverflow etc: https://github.com/expo/expo/issues/11012), I just unfortunately didn't have time to find it!
+I tested my API endpoints with Supertest. 
+Each suite of tests would be run in the respective directory (/app or /api) with `npm run test`.
 
 ### Monorepo/separate repos
 I went for a monorepo. I think it makes sense to have one repo per product - not one repo for an entire company's activities, but one repo for everything to do with a singular product. This is partly just for "tidiness" - keeping everything in one place, where you need it, to avoid context switching - but also so that changes to one part of the product can easily be tested for any unintended impacts across the whole scope of the product.
@@ -52,7 +56,6 @@ If I had prior knowledge of Redux, I would have used it from the start, but I wa
 
 ### Code linting
 I used ESLint - I think it makes sense for everyone across an organisation to use the same formatter/linter, regardless what that might be. I installed the TypeScript extensions to ensure the linter checked for type safety.
-
 
 Brief:
 Our tech stack is as follows:
