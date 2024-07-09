@@ -87,7 +87,6 @@ export default todoSlice.reducer;
 export const fetchTodos = createAsyncThunk('todos/fetchTodos',
     async (userEmail: string) => {
         const todos: TodoItem[] = await client.getTodos(userEmail)
-        console.log("todos in slice:",todos)
         return todos;
     });
 
@@ -109,6 +108,5 @@ export const deleteTodo = createAsyncThunk('todos/deleteTodo',
     async (todo: DeleteFormData) => {
         await client.deleteTodo(todo._id, todo.userEmail)
         const todos = await client.getTodos(todo.userEmail)
-        console.log(todos)
         return todos;
     })

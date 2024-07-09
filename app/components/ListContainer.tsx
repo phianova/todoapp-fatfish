@@ -12,7 +12,6 @@ interface Props {
 export default function ListContainer({ listTitle }: Props) {
     const loading = useAppSelector((state) => (listTitle === "Today") ? state.todayTodos.status : state.todos.status);
     const todos = useAppSelector((state) => (listTitle === "Today") ? state.todayTodos.todayTodos : state.todos.todos);
-    console.log(Array.isArray(todos), loading, todos);
     // View
     return (
         <View style={styles.container}>

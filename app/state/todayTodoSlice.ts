@@ -51,9 +51,7 @@ export default todayTodoSlice.reducer;
 
 export const fetchTodayTodos = createAsyncThunk('todos/fetchTodayTodos',
     async (userEmail: string) => {
-        console.log("email",userEmail)
         const todos: TodoItem[] = await client.getTodos(userEmail)
-        console.log(todos)
         const todayArray: TodoItem[] = []
         const today = new Date();
         if (!todos || todos.length === 0) {

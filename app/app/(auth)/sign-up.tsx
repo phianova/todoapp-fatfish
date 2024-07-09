@@ -42,7 +42,6 @@ export default function SignUpScreen() {
         await setActive({ session: completeSignUp.createdSessionId });
         await client.addUser(emailAddress).then((res) => {        
           if (res.success === true) {
-            console.log("line 45")
             router.replace('/');
           }
           else {
