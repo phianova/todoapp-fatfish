@@ -22,9 +22,7 @@ export default function SignUpScreen() {
       await signUp.create({
         emailAddress,
       });
-
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
       setPendingVerification(true);
     } catch (err) {
       console.error(err);
@@ -42,8 +40,14 @@ export default function SignUpScreen() {
       });
       if (completeSignUp.status === 'complete') {
         await setActive({ session: completeSignUp.createdSessionId });
-        await client.addUser(emailAddress);
-        router.replace('/');
+        await client.addUser(emailAddress).then((res) => {        
+          if (res.success === true) {
+            router.replace('/');
+          }
+          else {
+            console.error(res);
+          }
+        });
       } else {
         console.error(completeSignUp.status);
       }

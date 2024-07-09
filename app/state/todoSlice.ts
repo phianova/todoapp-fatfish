@@ -7,23 +7,13 @@ const client = new ApiClient();
 // Define a type for the slice state
 interface TodoState {
     todos: TodoItem[],
-    todayTodos: TodoItem[],
     status: 'idle' | 'loading' | 'succeeded' | 'failed',
     error: string | null,
 }
 
 const initialState = {
     todos: [{
-        _id: '',
-        title: '',
-        description: '',
-        priority: 0,
-        completed: false,
-        dueDate: "",
-        createdDate: "",
-    }],
-    todayTodos: [{
-        _id: '',
+        _id: 'todosNotSet',
         title: '',
         description: '',
         priority: 0,
@@ -89,18 +79,6 @@ export const todoSlice = createSlice({
                 state.error = action.error.message || 'Something went wrong'
                 console.error(state.error)
             })
-            .addCase(fetchTodayTodos.pending, (state) => {
-                state.status = 'loading'
-            })
-            .addCase(fetchTodayTodos.fulfilled, (state, action) => {
-                state.status = 'succeeded'
-                state.todayTodos = action.payload;
-            })
-            .addCase(fetchTodayTodos.rejected, (state, action) => {
-                state.status = 'failed'
-                state.error = action.error.message || 'Something went wrong'
-                console.error(state.error)
-            })
     }
 });
 
@@ -110,20 +88,6 @@ export const fetchTodos = createAsyncThunk('todos/fetchTodos',
     async (userEmail: string) => {
         const todos: TodoItem[] = await client.getTodos(userEmail)
         return todos;
-    });
-
-export const fetchTodayTodos = createAsyncThunk('todos/fetchTodayTodos',
-    async (userEmail: string) => {
-        const todos: TodoItem[] = await client.getTodos(userEmail)
-        const todayArray: TodoItem[] = []
-        const today = new Date();
-        for (const todo of todos) {
-            const dueDate = new Date(todo.dueDate);
-            if (dueDate.getDate() === today.getDate() && dueDate.getMonth() === today.getMonth() && dueDate.getFullYear() === today.getFullYear()) {
-                todayArray.push(todo)
-            }
-        }
-        return todayArray;
     });
 
 export const addTodo = createAsyncThunk('todos/addTodo',

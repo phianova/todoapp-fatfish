@@ -5,7 +5,8 @@ import ListContainer from "../../components/ListContainer";
 import AddToDoModal from "../../components/AddToDoModal";
 import { Link } from "expo-router";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { fetchTodos, fetchTodayTodos } from "../../state/todoSlice";
+import { fetchTodos } from "../../state/todoSlice";
+import { fetchTodayTodos } from "../../state/todayTodoSlice";
 import { signInUser,signOutUser } from "../../state/userSlice";
 
 export default function Index() {
@@ -14,21 +15,29 @@ export default function Index() {
   const { user, isSignedIn } = useUser();
   const { signOut } = useClerk();
   const dispatch = useAppDispatch();
-  if (isSignedIn && user?.primaryEmailAddress?.emailAddress) {
-    dispatch(signInUser(user?.primaryEmailAddress?.emailAddress));
-  }
 
+  // const todos = useAppSelector((state) => state.todos.todos);
+  // const todayTodos = useAppSelector((state) => state.todayTodos.todayTodos);
   const todos = useAppSelector((state) => state.todos.todos);
-  const todayTodos = useAppSelector((state) => state.todos.todayTodos);
-  const loading = useAppSelector((state) => state.todos.status);
+  const todosLoading = useAppSelector((state) => state.todos.status);
+  const todayTodosLoading = useAppSelector((state) => state.todayTodos.status);
+  const userLoading = useAppSelector((state) => state.users.status);
   const userEmail = useAppSelector((state) => state.users.userEmail);
 
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchTodos(userEmail));
-    dispatch(fetchTodayTodos(userEmail));
-  }, [])
+    if (isSignedIn && user?.primaryEmailAddress?.emailAddress) {
+      dispatch(signInUser(user?.primaryEmailAddress?.emailAddress));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userEmail !== "emailNotSet" && userEmail !== "" && userLoading === "succeeded") {
+      dispatch(fetchTodos(userEmail));
+      dispatch(fetchTodayTodos(userEmail));
+    }
+  }, [userEmail, todos.length]);
 
   const onPressSignOut = async () => {
     await signOut();
@@ -47,11 +56,11 @@ export default function Index() {
     <SignedIn>
     <View style={styles.pageContent}>
       <Text style={styles.title}>Hello {user?.primaryEmailAddress?.emailAddress}</Text>
-      {(loading == "loading") && <Text>Loading...</Text>}
-      {(loading == "succeeded") && todos &&
+      {(todosLoading == "loading" || todayTodosLoading == "loading") && <Text>Loading...</Text>}
+      {(todosLoading == "succeeded" && todayTodosLoading == "succeeded") &&
         <>
-          <ListContainer todos={todayTodos} listTitle="Today"/>
-          <ListContainer todos={todos} listTitle="All to-dos"/>
+          <ListContainer listTitle="Today"/>
+          <ListContainer listTitle="All to-dos"/>
         </>
       }
       <View style={styles.buttonContainer}>
