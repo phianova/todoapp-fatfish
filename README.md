@@ -20,7 +20,7 @@ Tech:
 - Serverless deployment
 - Clerk auth
 
-Structure:
+Plan:
 - Monorepo with /app and /api directories - [x]
 - To do object should have title, description, due date, created date, priority, completed status - [x]
 - Components should include todo item, expanded todo item, list container - [x]
