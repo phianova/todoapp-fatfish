@@ -2,12 +2,12 @@
 Simple to do list app for technical assessment for Fat Fish Digital
 
 ## Setup instructions:
-Software:
+- Software needed to run locally connecting to live Serverless API deployment: Android Studio (or other emulator), Node, IDE (I used VSCode)
 - Download Android Studio to use this with an Android emulator. Once Android Studio is installed, click "More" > "Virtual Device Manager", and add a new device - I use the Pixel 7 Pro with API 33.
-- Development build link is here: https://expo.dev/accounts/phia_nova/projects/app/builds/aa75a012-714e-4062-b242-3ebf1660e0c9
-- The API is deployed to Serverless at: https://4wgjp9tm5d.execute-api.eu-west-1.amazonaws.com/dev/
-- Run `npm install` in each of /api and /app to download the requisite packages in your local environment.
-- The app can be run from within /app using the command `npx expo start` and pressing `a` to run it in your emulator.
+- The development build link is here: https://expo.dev/accounts/phia_nova/projects/app/builds/49b66360-4705-489f-a111-10a0089187fd, please click this link and download the build to run it on your emulator.
+- The API is deployed to Serverless at: https://4wgjp9tm5d.execute-api.eu-west-1.amazonaws.com/dev/, which the app should already be configured to call.
+- Run `npm install` in each of `/api` and `/app` to download the requisite packages in your local environment.
+- The app can be run from within `/app` using the command `npx expo start` and pressing `a` when prompted to run it in your emulator.
 
 ## Project overview:
 Tech:
@@ -33,7 +33,7 @@ Nice-to-have functionality:
 - Strikethrough effect on completion - [x]
 - "Today" list - [x]
 - Colour priority indicators - [x]
-- Priority selector "low/med/high" - [ ]
+- Priority selector for "low/medium/high" instead of numbers 1-3 - [ ]
 - Expanded/collapsed Todo items - [x]
 - Date picker to add due dates in a user-friendly way - [ ]
 
@@ -49,11 +49,11 @@ I went with the principle of "never build your own auth" and started out trying 
 
 ### Automated testing
 I set up Jest to create snapshot tests and unit tests for my frontend components. However, I unfortunately ran into an issue with my Jest configuration such that I wasn't able to get my frontend testing suite to work in time. It seems like a well-documented issue but there should be a solution (see here, and other linked posts on StackOverflow etc: https://github.com/expo/expo/issues/11012), I just unfortunately didn't have time to find it!
-My attempt at creating frontend tests can be found on the 6-frontend-tests branch in the repository for reference - it involved changing a fair bit of the Redux code structure so I didn't feel merging it would be a good idea given the test suite wasn't working.
+My attempt at creating frontend tests can be found on the `6-frontend-tests` branch in the repository for reference - it involved changing a fair bit of the Redux code structure so I didn't feel merging it would be a good idea given the test suite wasn't working.
 I created some tests for my API endpoints with Supertest in api/index.test.ts. This suite of tests can be run in the /api directory with `npm run test`. Again, had I known how temperamental Mongoose could be with Jest, I would perhaps have opted for DynamoDB data storage instead.
 
 ### Monorepo/separate repos
-I went for a monorepo. I think it makes sense to have one repo per product - not one repo for an entire company's activities, but one repo for everything to do with a singular product. This is partly just for "tidiness" - keeping everything in one place, where you need it, to avoid context switching - but also so that changes to one part of the product can easily be tested for any unintended impacts across the whole scope of the product.
+I went for a monorepo. I think it makes sense to have one repo for everything to do with a singular product. This is partly just for "tidiness" - keeping everything in one place to avoid context switching - but also so that changes to one part of the product can easily be tested for any unintended impacts across the whole scope of the product.
 
 ### Code structure
 I began with the boilerplate Expo app and tweaked the structure to meet my needs. As this was a very basic app, I didn't need some of the functionality therein so I removed it to make the file structure clearer and cleaner. For the backend Express API, I separated out the router from the index and controller to clearly indicate which functionality lay with each stage.
@@ -64,6 +64,8 @@ If I had prior knowledge of Redux, I would have used it from the start, but I wa
 ### Code linting
 I used ESLint - I think it makes sense for everyone across an organisation to use the same formatter/linter, regardless what that might be. I installed the TypeScript extensions to ensure the linter checked for type safety.
 
+
+## The assessment task is below for reference.
 *Assessment Brief:*
 *Our tech stack is as follows:*
 *● Core*
