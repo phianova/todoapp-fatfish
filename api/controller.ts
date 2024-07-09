@@ -104,12 +104,18 @@ export const updateToDo = async function (req: express.Request, res: express.Res
 export const addUser = async function (req: express.Request, res: express.Response) {
     try {
         const { email } = req.body;
-        console.log("email in API controller", email);
         const user = new User({
             email,
             todos: [],
         });
-        console.log("user in API controller", user);
+        // Check user not already in DB
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({
+                success: false,
+                message: 'User already exists',
+            });
+        }
         await user.save().catch((err) => {
             console.log(err);
         })
@@ -124,6 +130,23 @@ export const addUser = async function (req: express.Request, res: express.Respon
         return res.status(500).json({
             success: false,
             message: 'User creation failed',
+            error: error
+        });
+    }
+}
+
+export const deleteUser = async function (req: express.Request, res: express.Response) {
+    try {
+        const { email } = req.body;
+        await User.deleteOne({ email });
+        return res.status(200).json({
+            success: true,
+            message: 'User deleted successfully',
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'User deletion failed',
             error: error
         });
     }

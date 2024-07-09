@@ -7,7 +7,7 @@ import serverless from 'serverless-http';
 import cors from 'cors';
 
 const app: express.Express = express();
-const port = process.env.PORT || 3000;
+// const port = process.env.PORT || 3000;
 
 // api gateway:
 // endpoints:
@@ -35,8 +35,5 @@ app.use(cors({
 }
 ));
 
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-})
-
 module.exports.handler = serverless(app)
+export default app;
