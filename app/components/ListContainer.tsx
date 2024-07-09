@@ -1,27 +1,29 @@
 import React from "react";
 
 import { View, Text, StyleSheet } from "react-native";
-import type { TodoItem } from "../utils/types";
 import ToDoListItem from "./ToDoListItem";
+import { useAppSelector } from "../state/hooks";
 
 // Types
 interface Props {
-    todos: TodoItem[],
     listTitle: string,
 }
 
-export default function ListContainer({ todos, listTitle }: Props) {
-
+export default function ListContainer({ listTitle }: Props) {
+    const loading = useAppSelector((state) => (listTitle === "Today") ? state.todayTodos.status : state.todos.status);
+    const todos = useAppSelector((state) => (listTitle === "Today") ? state.todayTodos.todayTodos : state.todos.todos);
+    console.log(Array.isArray(todos), loading, todos);
     // View
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{listTitle}</Text>
-            {(todos.length === 0 || todos === undefined) ? (
-                <Text style={styles.noTodos}>No todos!</Text>
-            ) : (
+            {(loading === "loading" || loading === "idle") ? <Text>Loading...</Text> :
+            (Array.isArray(todos) && todos.length !== 0 && todos !== undefined && todos[0]._id !== "todosNotSet") ? (
                 todos.map((todo) => (
                     <ToDoListItem key={todo._id} todo={todo} expanded={false} />
                 ))
+            ) : (
+                <Text style={styles.noTodos}>No todos!</Text>
             )
             }
         </View>

@@ -45,10 +45,8 @@ export default class ApiClient {
                 userEmail: userEmail
             }
         }).then((res) => {
-            console.log(res.data);
             return res.data;
         }).catch((err) => {
-            console.log(err.response.data);
             return err.response.data;
         });
     }
@@ -68,7 +66,6 @@ export default class ApiClient {
     }
 
     async addUser(userEmail: string) {
-        console.log(userEmail);
         return await axios({
             method: 'POST',
             url: `${url}/adduser`,

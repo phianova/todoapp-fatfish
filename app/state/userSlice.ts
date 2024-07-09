@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
-    userEmail: string
+    userEmail: string,
+    status: 'idle' | 'loading' | 'succeeded' | 'failed',
 }
 
 const initialState = {
-    userEmail: "",
+    userEmail: "emailNotSet",
+    status: 'idle',
 } as UserState;
 
 export const userSlice = createSlice({
@@ -14,6 +16,7 @@ export const userSlice = createSlice({
     reducers: {
         signInUser: (state, action: PayloadAction<string>) => {
             state.userEmail = action.payload;
+            state.status = 'succeeded';
         },
         signOutUser: (state) => {
             state.userEmail = "";

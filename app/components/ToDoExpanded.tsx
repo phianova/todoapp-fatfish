@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { updateTodo, deleteTodo } from "../state/todoSlice";
+import { fetchTodayTodos } from "../state/todayTodoSlice";
 
 import formatLongDate from "../utils/dates";
 
@@ -45,7 +46,6 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
 
     // Actions
     const onSubmit = useCallback((formData: FormData) => {
-        console.log(formData);
         if (formData.title === "" || formData.title === undefined) {
             formData.title = todo.title;
         }
@@ -69,6 +69,7 @@ export default function ToDoExpanded({ todo, isChecked }: Props) {
             userEmail: userEmail
         }
         dispatch(updateTodo(updateData));
+        dispatch(fetchTodayTodos(userEmail));
         setEditMode(false);
     }, []);
 
