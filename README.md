@@ -42,12 +42,13 @@ Nice-to-have functionality:
 ## Thoughts on:
 
 ### Data storage
-I went with a MongoDB database - partly because of familiarity, but partly because I felt the JSON-style data storage would make more sense for the todo objects than a relational database would. 
+I went with a MongoDB database - partly because of familiarity, but also because I felt the JSON-style data storage would make more sense for the todo objects than a relational database would. 
 However, having wrestled a bit with Mongo's interactions with Serverless, I think on balance I would choose DynamoDB if I did this again!
 This was also my first time using Redux for state management. I think had I fully understood its capabilities from the start I would have streamlined my project a bit more in terms of how my API calls were made to update the state.
 
 ### Auth
 I went with the principle of "never build your own auth" and started out trying to use Kinde, which I've used before. They have a React Native SDK and their prebuilt sign-up/sign-in pages work really well if you have a straightforward setup like this one. However, it seems their React Native/Expo SDKs are experiencing an ongoing bug at the moment, and they're soon to release a new Expo version. Given this (and the fact I immediately encountered said bug), I quickly got to grips with Clerk - which I actually found to be a lot better documented and still very user-friendly.
+Right now it only protects the frontend - if I'd had more time I would have created middleware to confirm user is logged in before accessing any of the API endpoints (and ideally passing a unique ID rather than the user's email address) but for the moment this at least protects the frontend routes calling the API. 
 
 ### Automated testing
 I set up Jest to create snapshot tests and unit tests for my frontend components. However, I unfortunately ran into an issue with my Jest configuration such that I wasn't able to get my frontend testing suite to work in time. It seems like a well-documented issue but there should be a solution (see here, and other linked posts on StackOverflow etc: https://github.com/expo/expo/issues/11012), I just unfortunately didn't have time to find it!
@@ -58,16 +59,24 @@ I created some tests for my API endpoints with Supertest in api/index.test.ts. T
 I went for a monorepo. I think it makes sense to have one repo for everything to do with a singular product. This is partly just for "tidiness" - keeping everything in one place to avoid context switching - but also so that changes to one part of the product can easily be tested for any unintended impacts across the whole scope of the product.
 
 ### Code structure
-I began with the boilerplate Expo app and tweaked the structure to meet my needs. As this was a very basic app, I didn't need some of the functionality therein so I removed it to make the file structure clearer and cleaner. For the backend Express API, I separated out the router from the index and controller to clearly indicate which functionality lay with each stage.
-I abstracted out my API client in the frontend to a class constructor, keeping the bulk of the functionality out of my pages/components. 
-The component structure is pretty simple - I used a modal to add a new todo item, a container component to produce each list (meaning there's scalability if you wanted to, for example, add filtering and other functionality in future), and a collapsed and expanded todo component. There wasn't really a need for complex navigation components in this case so I kept it very simple. 
-If I had prior knowledge of Redux, I would have used it from the start, but I wanted to ensure I had a working app and also gain an understanding of how it differs from standard React, so I started with a basic React Native application and then abstracted out the state management later.
+On the frontend, I began with the boilerplate Expo app and tweaked the structure to meet my needs. As this was a very basic app, I didn't need some of the functionality therein so I removed it to make the file structure clearer and cleaner. 
+For the backend Express API, I separated out the router from the index and controller to clearly indicate which functionality lay with each stage. I later separated out the server to allow for the index file to be run without a listener during testing.
+I abstracted out my API client in the frontend to a class constructor, keeping the bulk of the functionality out of my pages/components. I later moved most of the call functions into my Redux "slice" files, keeping my pages/components even simpler.
+The component structure is pretty simple - I used a modal to add a new todo item, a container component to produce each list (meaning there's scalability if you wanted to, for example, add filtering and other functionality in future), and a collapsed and expanded todo component. There wasn't really a need for complex navigation components in this case. 
+If I had prior knowledge of Redux, I would have used it from the start, but I wanted to ensure I had a working app and also gain an understanding of how it differs from standard React, so I started with a basic React Native/Expo application and then abstracted out the state management later.
 
 ### Code linting
-I used ESLint - I think it makes sense for everyone across an organisation to use the same formatter/linter, regardless what that might be. I installed the TypeScript extensions to ensure the linter checked for type safety.
+I used ESLint - I think it makes sense for everyone across an organisation to use the same formatter/linter, regardless what that might be. I installed TypeScript extensions to ensure the linter checked for type safety.
 
+### Final thoughts
+Overall this was a really good learning experience for me and I enjoyed the process.
+Things I would change/add:
+- Use DynamoDB data storage for ease of use with Serverless and Jest
+- Structure the app using Redux principles from the start
+- Extend authentication to properly protect the backend API routes
+- Format due dates better - I had to remove the "Date" type in the frontend to be able to store it in Redux and didn't have time to work out a way to ensure the user still entered a valid date
 
-## The assessment task is below for reference.
+**The assessment task is below for reference.**
 *Assessment Brief:*
 *Our tech stack is as follows:*
 *● Core*

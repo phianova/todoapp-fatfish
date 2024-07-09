@@ -1,10 +1,10 @@
 
 export function formatLongDate(date: string) {
     const typedDate = new Date(date)
-    return typedDate.getDate() + "/" + (typedDate.getMonth() + 1) + "/" + typedDate.getFullYear();
+    return typedDate.getDate().toLocaleString("en-GB", { minimumIntegerDigits: 2 }) + "/" + (typedDate.getMonth().toLocaleString("en-GB", { minimumIntegerDigits: 2 })) + "/" + typedDate.getFullYear().toLocaleString("en-GB", { minimumIntegerDigits: 4 });
 }
 
 export default function formatShortDate(date: string) {
     const typedDate = new Date(date)
-    return typedDate.getDate() + "/" + (typedDate.getMonth() + 1);
+    return typedDate.getDate().toLocaleString("en-GB", { minimumIntegerDigits: 2 }) + "/" + (typedDate.getMonth().toLocaleString("en-GB", { minimumIntegerDigits: 2 }));
 }    
