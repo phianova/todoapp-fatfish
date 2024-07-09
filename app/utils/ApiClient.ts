@@ -1,9 +1,12 @@
 import axios from 'axios';
 import { TodoItem } from './types';
 
+// URL for Serverless API deployment
+// Can replace if running backend locally
 const url = "https://4wgjp9tm5d.execute-api.eu-west-1.amazonaws.com/dev"
 
 export default class ApiClient {
+    // Calls getTodos in the API
     async getTodos(userEmail: string) {
         return await axios.get<{data: TodoItem[]}>
         (`${url}/get/${userEmail}`)
@@ -14,6 +17,7 @@ export default class ApiClient {
         });
     }
 
+    // Calls addTodo in the API
     async addTodo(title: string, description: string, priority: number, dueDate: string, userEmail: string) {
         return await axios({
             method: 'POST',
@@ -32,6 +36,7 @@ export default class ApiClient {
         });
     }
 
+    // Calls updateTodo in the API
     async updateTodo(id: string, title: string, description: string, priority: number, dueDate: string, completed: boolean, userEmail: string) {
         return await axios({
             method: 'PUT',
@@ -51,6 +56,7 @@ export default class ApiClient {
         });
     }
 
+    // Calls deleteTodo in the API
     async deleteTodo(id: string, userEmail: string) {
         return await axios({
             method: 'DELETE',

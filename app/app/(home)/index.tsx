@@ -11,27 +11,37 @@ import { signInUser,signOutUser } from "../../state/userSlice";
 
 export default function Index() {
 
-  // State
+  //// Setup
   const { user, isSignedIn } = useUser();
   const { signOut } = useClerk();
   const dispatch = useAppDispatch();
 
-  // const todos = useAppSelector((state) => state.todos.todos);
-  // const todayTodos = useAppSelector((state) => state.todayTodos.todayTodos);
+  //// State
+  // Global State
   const todos = useAppSelector((state) => state.todos.todos);
   const todosLoading = useAppSelector((state) => state.todos.status);
   const todayTodosLoading = useAppSelector((state) => state.todayTodos.status);
   const userLoading = useAppSelector((state) => state.users.status);
   const userEmail = useAppSelector((state) => state.users.userEmail);
-
+  // Local State
   const [modalVisible, setModalVisible] = useState(false);
 
+  //// Actions
+  // Sign out - triggers Clerk to sign user out and removes user email from global state
+  const onPressSignOut = async () => {
+    await signOut();
+    dispatch(signOutUser());
+  }
+
+  //// Effects
+  // Adds user email to global state when signed in via Clerk
   useEffect(() => {
     if (isSignedIn && user?.primaryEmailAddress?.emailAddress) {
       dispatch(signInUser(user?.primaryEmailAddress?.emailAddress));
     }
   }, []);
 
+  // Fetches todos and today todos once user email is loaded in global state
   useEffect(() => {
     if (userEmail !== "emailNotSet" && userEmail !== "" && userLoading === "succeeded") {
       dispatch(fetchTodos(userEmail));
@@ -39,12 +49,6 @@ export default function Index() {
     }
   }, [userEmail, todos.length]);
 
-  const onPressSignOut = async () => {
-    await signOut();
-    dispatch(signOutUser());
-  }
-
-// View
   return (
     <View style={{
       flex: 1,
@@ -59,13 +63,13 @@ export default function Index() {
       {(todosLoading == "loading" || todayTodosLoading == "loading") && <Text>Loading...</Text>}
       {(todosLoading == "succeeded" && todayTodosLoading == "succeeded") &&
         <>
-          <ListContainer listTitle="Today"/>
           <ListContainer listTitle="All to-dos"/>
+          <ListContainer listTitle="Today"/>
         </>
       }
       <View style={styles.buttonContainer}>
       <Button color="green" title="Add To Do" onPress={() => setModalVisible(true)}></Button>
-      {modalVisible && <AddToDoModal modalVisible={modalVisible} setModalVisible={setModalVisible} userEmail={userEmail} />}
+      {modalVisible && <AddToDoModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>}
       <Button color="gray" title="Sign out" onPress={onPressSignOut}></Button>
       </View>
     </View>

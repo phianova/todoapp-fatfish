@@ -3,14 +3,12 @@ import React, { useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { addTodo } from "../state/todoSlice";
 import { AddFormData } from "../utils/types";
-import { useAppDispatch } from "../state/hooks";
-// import { fetchTodayTodos } from "@/state/todayTodoSlice";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
 
 // Types 
 interface Props {
     modalVisible: boolean;
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-    userEmail: string;
 }
 interface FormData {
     title: string;
@@ -19,22 +17,29 @@ interface FormData {
     dueDate: string;
 }
 
-export default function AddToDoModal({ modalVisible, setModalVisible, userEmail }: Props) {
+export default function AddToDoModal({ modalVisible, setModalVisible }: Props) {
+    //// Setup
     const { setValue, handleSubmit, register } = useForm<FormData>();
     const dispatch = useAppDispatch();
 
-    // Actions
+    //// State
+    const userEmail = useAppSelector((state) => state.users.userEmail);
+
+    //// Actions
+    // Submit form - adds todo to global state (which then gets todos from backend via thunk) and closes modal
     const onSubmit = useCallback((formData: FormData) => {
         const addFormData: AddFormData = { ...formData, userEmail };
         dispatch(addTodo(addFormData));
         setModalVisible(false);
     }, []);
 
+    // Field change - updates state of form elements with field values ( using react-hook-form )
     const onChangeField = useCallback((name: string) => (text: string) => {
         setValue(name as ("title" | "description" | "priority" | "dueDate"), text);
     }, []);
 
-    // Effects
+    //// Effects
+    // Registers form field inputs with react-hook-form
     useEffect(() => {
         register("title");
         register("description");
@@ -42,7 +47,6 @@ export default function AddToDoModal({ modalVisible, setModalVisible, userEmail 
         register("dueDate");
     }, [register]);
 
-    // View
     return (
         <Modal
             animationType="slide"

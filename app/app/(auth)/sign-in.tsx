@@ -4,13 +4,17 @@ import { Text, TextInput, Button, View, StyleSheet } from "react-native";
 import React, { useState, useCallback } from "react";
 
 export default function Page() {
+  //// Setup
   const { signIn, setActive, isLoaded } = useSignIn();
   const router = useRouter();
 
+  //// State
   const [emailAddress, setEmailAddress] = useState("");
   const [code, setCode] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
 
+  //// Actions
+  // Sign in - triggers Clerk to send email OTP
   const onSignInPress = useCallback(async () => {
     if (!isLoaded) {
       return;
@@ -27,7 +31,8 @@ export default function Page() {
       console.error(err);
     }
   }, [isLoaded, emailAddress]);
-
+  
+// Verify - triggers Clerk to verify email OTP
   const onPressVerify = async () => {
     if (!isLoaded) {
       return;

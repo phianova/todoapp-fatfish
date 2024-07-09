@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-// Define type for todo item
+// Type for todo item in DB
 export interface TodoItem {
     _id: mongoose.Schema.Types.ObjectId;
     title: string;
@@ -10,14 +10,14 @@ export interface TodoItem {
     completed: boolean;
 }
 
-// Define type for user
+// Type for user in DB
 export interface User {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
     todos: TodoRef[];
 }
 
-// Define type for todo item reference
+// Type for todo item reference - i.e. object in array in user.todos
 export interface TodoRef {
     refId: TodoItem;
 }

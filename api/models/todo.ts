@@ -2,7 +2,6 @@ import type { TodoItem } from '../types';
 import mongoose from 'mongoose';
 
 const todo = new mongoose.Schema<TodoItem>({
-    // id: { type: mongoose.Schema.Types.ObjectId, required: false },
     title: { type: String, required: true },
     description: { type: String, required: true },
     priority: { type: Number, required: true },
