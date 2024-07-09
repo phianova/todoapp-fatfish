@@ -4,7 +4,7 @@ Simple to do list app for technical assessment for Fat Fish Digital
 ## Setup instructions:
 - Software needed to run locally connecting to live Serverless API deployment: Android Studio (or other emulator), Node, IDE (I used VSCode)
 - Download Android Studio to use this with an Android emulator. Once Android Studio is installed, click "More" > "Virtual Device Manager", and add a new device - I use the Pixel 7 Pro with API 33.
-- The development build link is here: https://expo.dev/accounts/phia_nova/projects/app/builds/a2ae0d2e-8410-489e-b4ab-64938b221dff, please click this link and download the build to run it on your emulator.
+- The development build link is here: https://expo.dev/accounts/phia_nova/projects/app/builds/344ba01a-cb09-4042-9852-9ee45bb4b32a, please click this link and download the build to run it on your emulator.
 - The API is deployed to Serverless at: https://4wgjp9tm5d.execute-api.eu-west-1.amazonaws.com/dev/, which the app should already be configured to call.
 - Run `npm install` in each of `/api` and `/app` to download the requisite packages in your local environment.
 - The app can be run from within `/app` using the command `npx expo start` and pressing `a` when prompted to run it in your emulator.
